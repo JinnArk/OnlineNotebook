@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.notebook.dao.UserInfoMapper;
 import com.notebook.entities.UserInfo;
 import com.notebook.service.UserInfoService;
@@ -16,8 +17,22 @@ public class UserInfoSerViceImpl implements UserInfoService{
 	private UserInfoMapper userInfoMapper;
 	
 	@Override
-	public List<UserInfo> getUserInfoByID() {
-		return userInfoMapper.getAll();
+	public UserInfo getUserInfoByID(int userID) {
+		return userInfoMapper.selectById(userID);
 	}
 
+	@Override
+	public List<UserInfo> getAllUserAndRole() {
+		return userInfoMapper.selectAllUserAndRole();
+	}
+
+	@Override
+	public List<UserInfo> getAllUser() {
+		return userInfoMapper.selectAllUser();
+	}
+
+	@Override
+	public Page<UserInfo> getUsersByPageAndCondition(Page<UserInfo> page, int state) {
+		return page.setRecords(userInfoMapper.selectUsersByPageAndCondition(page, state));
+	}
 }
