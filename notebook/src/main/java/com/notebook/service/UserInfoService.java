@@ -17,9 +17,17 @@ public interface UserInfoService {
 	 * 
 	 * @author 2ing
 	 * @createTime 2018年1月8日
-	 * @remarks 获取用户数据，根据ID
+	 * @remarks 获取用户信息，根据ID
 	 */
 	UserInfo getUserInfoByID(int userID);
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月12日
+	 * @remarks 获取用户信息，根据用户帐号名称(包括角色)
+	 */
+	UserInfo getUserInfoByUsername(String Username);
 	 
 	 /**
 	  * 
@@ -43,5 +51,5 @@ public interface UserInfoService {
 	  * @createTime 2018年1月10日
 	  * @remarks 获取用户信息，根据分页信息和条件
 	  */
-	 Page<UserInfo> getUsersByPageAndCondition(Page<UserInfo> page, int state);
+	 Page<UserInfo> getUsersByPageAndCondition(Page<UserInfo> page, String condition);
 }

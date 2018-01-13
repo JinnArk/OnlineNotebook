@@ -5,14 +5,10 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 
-//mybatis使用通用mapper,不需要@Table注释，但一定要@Id注释
-//换成mybatis-plus之后开启大小下划线写判断，db-column-underline(表)，capital-mode(数据库)，所以不需要TableName和TableField注释了
-//但是由于roles是多对多外键，所以需要单独注释 exist=false(表示表中不存在)
 public class UserInfo {
-	
-    private Integer id;
+    private int userId;
 
-    private Integer uid;
+    private int uuid;
 
     private String username;
 
@@ -22,12 +18,12 @@ public class UserInfo {
 
     private String salt;
 
-    private Integer state;
+    private int state;
 
     private Date createDate;
 
     private Date loginDate;
-    
+
     //定义角色属性
     @TableField(exist=false)
     private List<SysRole> roles;
@@ -39,21 +35,21 @@ public class UserInfo {
 	public void setRoles(List<SysRole> roles) {
 		this.roles = roles;
 	}
-
-	public Integer getId() {
-        return id;
+    
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public Integer getUid() {
-        return uid;
+    public int getUuid() {
+        return uuid;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setUuid(int uuid) {
+        this.uuid = uuid;
     }
 
     public String getUsername() {
@@ -88,11 +84,11 @@ public class UserInfo {
         this.salt = salt == null ? null : salt.trim();
     }
 
-    public Integer getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(Integer state) {
+    public void setState(int state) {
         this.state = state;
     }
 

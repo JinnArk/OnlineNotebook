@@ -2,7 +2,6 @@
 	<head>
 	</head>
 	<body>
-		Welcome to there!!
-		${v1}
+		这里是游客可以看到的首页！
 	</body>
 </html>

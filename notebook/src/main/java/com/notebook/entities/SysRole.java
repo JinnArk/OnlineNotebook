@@ -1,20 +1,35 @@
 package com.notebook.entities;
 
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+
 public class SysRole {
-    private Integer id;
+    private int roleId;
 
     private String role;
 
     private String description;
 
-    private Integer state;
+    private int roleState;
+    
+    @TableField(exist=false)
+    private List<SysPermission> permissions;
 
-    public Integer getId() {
-        return id;
+    public List<SysPermission> getPermissions() {
+    	return permissions;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPermissions(List<SysPermission> permissions) {
+    	this.permissions = permissions;
+    }
+    
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
     public String getRole() {
@@ -33,11 +48,11 @@ public class SysRole {
         this.description = description == null ? null : description.trim();
     }
 
-    public Integer getState() {
-        return state;
+    public int getRoleState() {
+        return roleState;
     }
 
-    public void setState(Integer state) {
-        this.state = state;
+    public void setRoleState(int roleState) {
+        this.roleState = roleState;
     }
 }

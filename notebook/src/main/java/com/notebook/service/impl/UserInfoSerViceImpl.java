@@ -32,7 +32,12 @@ public class UserInfoSerViceImpl implements UserInfoService{
 	}
 
 	@Override
-	public Page<UserInfo> getUsersByPageAndCondition(Page<UserInfo> page, int state) {
-		return page.setRecords(userInfoMapper.selectUsersByPageAndCondition(page, state));
+	public Page<UserInfo> getUsersByPageAndCondition(Page<UserInfo> page, String condtion) {
+		return page.setRecords(userInfoMapper.selectUsersByPageAndCondition(page, condtion));
+	}
+
+	@Override
+	public UserInfo getUserInfoByUsername(String username) {
+		return userInfoMapper.selectUserInfoByUsername(username);
 	}
 }

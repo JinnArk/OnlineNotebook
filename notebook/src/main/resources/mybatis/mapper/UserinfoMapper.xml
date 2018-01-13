@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.notebook.dao.UserInfoMapper" >
+	<!-- 用户 -->
     <resultMap id="UserInfoResultMap" type="com.notebook.entities.UserInfo" >
-        <id column="ID" property="id" jdbcType="BIGINT" />
+        <id column="USER_ID" property="userId" jdbcType="BIGINT" />
+        <result column="UUID" property="uuid" jdbcType="BIGINT" />
         <result column="USERNAME" property="username" jdbcType="VARCHAR" />
         <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
         <result column="NICKNAME" property="nickname" jdbcType="VARCHAR" />
@@ -10,18 +12,28 @@
         <result column="STATE" property="state" jdbcType="BIGINT" />
         <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
         <result column="LOGIN_DATE" property="loginDate" jdbcType="DATE" />
-        
     </resultMap>
-    
+        
+    <!-- 角色 -->
     <resultMap type="com.notebook.entities.UserInfo" id="userRoleList"
         extends="UserInfoResultMap">
         <collection property="roles" ofType="com.notebook.entities.SysRole">
-            <id column="ID" property="id" jdbcType="BIGINT" />
+            <id column="ROLE_ID" property="roleId" jdbcType="BIGINT" />
 	        <result column="ROLE" property="role" jdbcType="VARCHAR" />
 	        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
-	        <result column="STATE" property="state" jdbcType="BIGINT" />
+	        <result column="ROLE_STATE" property="roleState" jdbcType="BIGINT" />
+	        
+	        <collection property="permissions" ofType="com.notebook.entities.SysPermission">
+	            <id column="PERMISSION_ID" property="permissionId" jdbcType="BIGINT" />
+		        <result column="PERMISSION_NAME" property="permissionName" jdbcType="VARCHAR" />
+		        <result column="PERMISSION_STR" property="permissionStr" jdbcType="VARCHAR" />
+		        <result column="RESOURCE_TYPE" property="resourceType" jdbcType="VARCHAR" />
+		        <result column="RESOURCE_URL" property="resourceUrl" jdbcType="VARCHAR" />
+	        </collection>
         </collection>
     </resultMap>
+    
+    <!-- 权限 -->
     
     <sql id="Base_Column_List" >
         ID, USERNAME, PASSWORD, NICKNAME, SALT, STATE, CREATE_DATE, LOGIN_DATE
@@ -39,8 +51,19 @@
 		LEFT JOIN SYS_ROLE R ON R.ID=UR.ROLE_ID;
     </select>
     
+    <!-- 这里要修改成根据条件查询 -->
     <select id="selectUsersByPageAndCondition" resultMap="UserInfoResultMap">
 	    SELECT * FROM USER_INFO WHERE state=#{state}
 	</select>
-
+	
+	<!-- 获取用户数据(包括角色和权限)，根据username -->
+	<select id="selectUserInfoByUsername" resultMap="userRoleList">
+		SELECT U.*,R.*,P.* FROM USER_INFO U 
+		LEFT JOIN MD_USER_ROLE UR ON U.USER_ID=UR.USER_ID 
+		LEFT JOIN SYS_ROLE R ON R.ROLE_ID=UR.ROLE_ID
+		LEFT JOIN MD_ROLE_PERMISSION RP ON R.ROLE_ID=RP.ROLE_ID
+		LEFT JOIN SYS_PERMISSION P ON RP.PERMISSION_ID=P.PERMISSION_ID
+		WHERE U.USERNAME=#{username}
+    </select>
+	
 </mapper>
