@@ -1,10 +1,14 @@
 package com.notebook.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 
-public class SysRole {
+public class SysRole implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
     private int roleId;
 
     private String role;

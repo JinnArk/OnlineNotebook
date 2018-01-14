@@ -7,12 +7,20 @@ import java.util.Map;
 
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
   
 /**
  * Shiro 配置
@@ -38,7 +46,7 @@ public class ShiroConfiguration {
      */
     @Bean
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager){
-       System.out.println("ShiroConfiguration.shirFilter()=====>已启动Shiro拦截器");
+       //System.out.println("ShiroConfiguration.shirFilter()=====>已启动Shiro拦截器");
        ShiroFilterFactoryBean shiroFilterFactoryBean  = new ShiroFilterFactoryBean();
        
         // 必须设置 SecurityManager 
@@ -49,9 +57,16 @@ public class ShiroConfiguration {
        
        //配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
        filterChainDefinitionMap.put("/logout", "logout");
+
+       //配置记住我或认证通过可以访问的地址
+       filterChainDefinitionMap.put("/ui/index", "user");
        
        //<!-- 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
-        //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
+       //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
+       
+       //从数据库动态设置权限管理
+       //不使用
+       //filterChainDefinitionMap.put("/ui/userDel", "roles[admin],perms[userDelete]");
        
        //所有 用户/管理员 方法都拦截
        filterChainDefinitionMap.put("/ui/**", "authc");
@@ -60,12 +75,13 @@ public class ShiroConfiguration {
        //不拦截登陆方法
        filterChainDefinitionMap.put("/sign", "anon");
        
+       
        // 如果不设置默认会自动寻找Web工程根目录下的"/login" 页面(文件)
         shiroFilterFactoryBean.setLoginUrl("/login");
         // 登录成功后要跳转的链接
         shiroFilterFactoryBean.setSuccessUrl("/ui/index");
         //未授权界面;
-        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
        
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         
@@ -96,6 +112,10 @@ public class ShiroConfiguration {
        DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
        //加入字节自己设置的relam
        securityManager.setRealm(notebookShiroRealm());
+       //加入缓存管理器
+       securityManager.setCacheManager(ehCacheManager());
+       //加入rememberme管理器
+       securityManager.setRememberMeManager(rememberMeManager());
        return securityManager;
     }
     
@@ -113,17 +133,83 @@ public class ShiroConfiguration {
     	return hashedCredentialsMatcher;
     }
     
+    
     /**
-     *  开启shiro aop注解支持.
-     *  使用代理方式;所以需要开启代码支持;
-     * @param securityManager
+     * Shiro生命周期处理器
      * @return
      */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
-       AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-       authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-       return authorizationAttributeSourceAdvisor;
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor(){
+        return new LifecycleBeanPostProcessor();
+    }
+    /**
+     * 
+     * @author 2ing
+     * @createTime 2018年1月14日
+     * @remarks 启动shiro的@requireXXX注释
+     */
+    @Bean
+    @DependsOn({"lifecycleBeanPostProcessor"})
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
+    }
+    
+    /**  
+     *  开启shiro aop注解支持.  
+     *  使用代理方式;所以需要开启代码支持;  
+     * @param securityManager  
+     * @return  
+     */  
+    @Bean  
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(@Qualifier("securityManager") SecurityManager securityManager){  
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        return authorizationAttributeSourceAdvisor;
+    }  
+    
+
+    /**
+     * shiro缓存管理器;
+     * 需要注入对应的其它的实体类中：
+     * 	安全管理器：securityManager
+     * @return
+     */
+    @Bean
+    public EhCacheManager ehCacheManager(){
+       EhCacheManager cacheManager = new EhCacheManager();
+       cacheManager.setCacheManagerConfigFile("classpath:config/shiro/ehcache-shiro.xml");
+       return cacheManager;
+    }
+    
+    /**
+     * rememberMe使用
+     * cookie对象
+     * @return
+     */
+    @Bean
+    public SimpleCookie rememberMeCookie(){
+       //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
+       SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+       //<!-- 记住我cookie生效时间30天 ,单位秒;-->
+       simpleCookie.setMaxAge(259200);
+       return simpleCookie;
+    }
+    
+    /**
+     * rememberMe使用
+     * cookie管理对象
+     * @return
+     */
+    @Bean
+    public CookieRememberMeManager rememberMeManager(){
+       CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+       cookieRememberMeManager.setCookie(rememberMeCookie());
+       
+       //rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)
+       cookieRememberMeManager.setCipherKey(Base64.decode("2AvVhdsgUs0FSA3SDFAdag=="));
+       return cookieRememberMeManager;
     }
         
 }

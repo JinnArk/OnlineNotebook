@@ -4,6 +4,9 @@ package com.notebook.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,15 +23,24 @@ public class UserController {
 	@Autowired
 	UserInfoService userInfoService;
 
+	@RequestMapping(value="/index", method=RequestMethod.GET)
+	public ModelAndView userIndex(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		return new ModelAndView("/ui/index");
+	}
 	
 	@RequestMapping(value="/userAdd", method=RequestMethod.GET)
-	public ModelAndView user(final Model model, final HttpServletRequest request, HttpServletResponse response){
+	@RequiresRoles(value={"admin","user"},logical = Logical.OR)
+	@RequiresPermissions(value={"userAdd"},logical = Logical.AND)
+	public ModelAndView userAdd(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
 		return new ModelAndView("/ui/user");
 	}
 	
 	@RequestMapping(value="/userUpdate", method=RequestMethod.GET)
-	public ModelAndView user2(final Model model, final HttpServletRequest request, HttpServletResponse response){
+	@RequiresRoles(value={"admin","user"},logical = Logical.OR)
+	@RequiresPermissions(value={"userUpdate"},logical = Logical.AND)
+	public ModelAndView userUpdate(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
 		//List<UserInfo> temp = userInfoService.getAllUser();
 		//List<UserInfo> temp = userInfoService.getAllUserAndRole();
@@ -36,19 +48,10 @@ public class UserController {
 		return new ModelAndView("/ui/user");
 	}
 	
-	@RequestMapping(value="/user3", method=RequestMethod.GET)
-	public ModelAndView user3(final Model model, final HttpServletRequest request, HttpServletResponse response){
-		
-		//分页条件已改，不能使用了
-//		Page<UserInfo> page=new Page<UserInfo>(1,1);//当前页，页面大小
-//		page = userInfoService.getUsersByPageAndCondition(page,1);
-//		
-//		System.out.println(page.toString());
-//		
-//		UserInfo t1 = (UserInfo)page.getRecords().get(0);
-//		System.out.println(t1.getId());
-//		System.out.println(t1.getUsername());
-//		System.out.println(t1.getPassword());
+	@RequestMapping(value="/userDel", method=RequestMethod.GET)
+	@RequiresRoles(value={"admin","user"},logical = Logical.OR)
+	@RequiresPermissions(value={"userDelete"},logical = Logical.AND)
+	public ModelAndView userDel(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
 		return new ModelAndView("/ui/user");
 	}

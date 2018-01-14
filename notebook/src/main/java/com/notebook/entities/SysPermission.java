@@ -1,6 +1,11 @@
 package com.notebook.entities;
 
-public class SysPermission {
+import java.io.Serializable;
+
+public class SysPermission implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
     private int permissionId;
 
     private String permissionName;

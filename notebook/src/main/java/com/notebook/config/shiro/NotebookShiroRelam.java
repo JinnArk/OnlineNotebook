@@ -29,7 +29,7 @@ public class NotebookShiroRelam extends AuthorizingRealm{
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken token) throws AuthenticationException {
-		System.out.println("Shiro:doGetAuthenticationInfo()===>已启用");
+		//System.out.println("Shiro验证配置:doGetAuthenticationInfo()===>已启用");
 		
 		//获取用户输入的：账户名称
 		String username = (String)token.getPrincipal();
@@ -39,36 +39,36 @@ public class NotebookShiroRelam extends AuthorizingRealm{
 		
 		UserInfo userInfo = userInfoService.getUserInfoByUsername(username);
 		
-		System.out.println("====================用户信息======================");
-		
-		System.out.println(userInfo.getUserId());
-		System.out.println(userInfo.getUuid());
-		System.out.println(userInfo.getUsername());
-		System.out.println(userInfo.getPassword());
-		System.out.println(userInfo.getNickname());
-		System.out.println(userInfo.getSalt());
-		System.out.println(userInfo.getState());
-		System.out.println(userInfo.getCreateDate());
-		System.out.println(userInfo.getLoginDate());
-		
-		System.out.println("====================角色信息======================");
-		for(SysRole r1:userInfo.getRoles()){
-			System.out.println(r1.getRoleId());
-			System.out.println(r1.getRole());
-			System.out.println(r1.getRoleState());
-			System.out.println(r1.getDescription());
-		}
-		System.out.println("====================权限信息=======================");
-		for(SysRole r1:userInfo.getRoles()){
-			for(SysPermission p1:r1.getPermissions()){
-				System.out.println(p1.getPermissionId());
-				System.out.println(p1.getPermissionName());
-				System.out.println(p1.getPermissionStr());
-				System.out.println(p1.getResourceType());
-				System.out.println(p1.getResourceUrl());
-			}
-		}
-		System.out.println("==================================================");
+//		System.out.println("====================用户信息======================");
+//		
+//		System.out.println(userInfo.getUserId());
+//		System.out.println(userInfo.getUuid());
+//		System.out.println(userInfo.getUsername());
+//		System.out.println(userInfo.getPassword());
+//		System.out.println(userInfo.getNickname());
+//		System.out.println(userInfo.getSalt());
+//		System.out.println(userInfo.getState());
+//		System.out.println(userInfo.getCreateDate());
+//		System.out.println(userInfo.getLoginDate());
+//		
+//		System.out.println("====================角色信息======================");
+//		for(SysRole r1:userInfo.getRoles()){
+//			System.out.println(r1.getRoleId());
+//			System.out.println(r1.getRole());
+//			System.out.println(r1.getRoleState());
+//			System.out.println(r1.getDescription());
+//		}
+//		System.out.println("====================权限信息=======================");
+//		for(SysRole r1:userInfo.getRoles()){
+//			for(SysPermission p1:r1.getPermissions()){
+//				System.out.println(p1.getPermissionId());
+//				System.out.println(p1.getPermissionName());
+//				System.out.println(p1.getPermissionStr());
+//				System.out.println(p1.getResourceType());
+//				System.out.println(p1.getResourceUrl());
+//			}
+//		}
+//		System.out.println("==================================================");
 		
 		//判断用户是否存在
 		if(userInfo == null){
@@ -117,15 +117,31 @@ public class NotebookShiroRelam extends AuthorizingRealm{
      * @return
      */
 	@Override
-	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection pribcipals) {
-		System.out.println("Shiro:doGetAuthorizationInfo()===>已启用");
+	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection pribcipals){
+		//System.out.println("Shiro权限配置:doGetAuthorizationInfo()===>已启用");
 		
-//		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-//		UserInfo userInfo = (UserInfo)pribcipals.getPrimaryPrincipal();
-//		
-//		userInfo.getRoles();
+		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+		UserInfo userInfo = (UserInfo)pribcipals.getPrimaryPrincipal();
 		
-		return null;
+		//从缓存中获取
+		//UserInfo userInfoRolesAndPermission = userInfoService.getUserInfoByUsername(userInfo.getUsername());
+		
+		for(SysRole role:userInfo.getRoles()){
+			authorizationInfo.addRole(role.getRole());
+			for(SysPermission permission: role.getPermissions()){
+				authorizationInfo.addStringPermission(permission.getPermissionStr());
+			}
+		}
+		System.out.println("======================已授予角色=========================");
+		for(String role:authorizationInfo.getRoles()){
+			System.out.println("=> "+role);
+		}
+		System.out.println("======================已授予权限=========================");
+		for(String permission:authorizationInfo.getStringPermissions()){
+			System.out.println("=> "+permission);
+		}
+		
+		return authorizationInfo;
 	}
 	
 	

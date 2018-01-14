@@ -30,6 +30,18 @@ public class HomeController {
 	/**
 	 * 
 	 * @author 2ing
+	 * @createTime 2018年1月14日
+	 * @remarks 在shiro中设置的未授权页面
+	 */
+	@RequestMapping(value={"/unauthorized"},method=RequestMethod.GET)
+	public ModelAndView unauthorized(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		return new ModelAndView("403");
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
 	 * @createTime 2018年1月12日
 	 * @remarks 进入游客首页(未登录)
 	 */
@@ -61,7 +73,7 @@ public class HomeController {
 	@RequestMapping(value="/sign",method=RequestMethod.POST)
 	public ModelAndView sign(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
-		System.out.println("===================>>>进入登陆方法:sign()");
+		//System.out.println("===================>>>进入登陆方法:sign()");
 		
 		//从request中获取 登录信息
 		//帐号名称
@@ -72,6 +84,12 @@ public class HomeController {
 		
 		//生成令牌进行验证
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+		
+		// rememberme判断-设置
+		if(request.getParameter("rememberMe")!=null){
+			//System.out.println("rememberMe is not null");
+		    token.setRememberMe(true);
+		}
 		
 		//获取授权对象
 		Subject currentUser = SecurityUtils.getSubject();
@@ -99,9 +117,10 @@ public class HomeController {
 		//是否验证成功
 		if(currentUser.isAuthenticated()){
 			//request.getSession().setAttribute(username, request.getRequestedSessionId());
-			return new ModelAndView("/ui/index");
+            return new ModelAndView("redirect:/ui/index");
 		}else{
-			return new ModelAndView("/login");
+			token.clear();
+			return new ModelAndView("redirect:/login");
 		}
 		
 		

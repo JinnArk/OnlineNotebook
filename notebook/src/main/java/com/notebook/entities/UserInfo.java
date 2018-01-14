@@ -1,11 +1,15 @@
 package com.notebook.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 
-public class UserInfo {
+public class UserInfo implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
     private int userId;
 
     private int uuid;
