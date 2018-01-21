@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>登录</title>
+	<title>找回密码</title>
 	<link type="text/css" href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link type="text/css" href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 	<link type="text/css" href="static/css/theme.css" rel="stylesheet">
@@ -17,34 +17,31 @@
 		<div class="container">
 			<div class="row">
 				<div class="module module-login span4 offset4">
-				
-					<form class="form-vertical" action="/sign" method="post">
-					
+					<form class="form-vertical">
 						<div class="module-head">
-							<h3>登录</h3>
+							<h3>找回密码</h3>
 						</div>
+						
 						<div class="module-body">
 							<div class="control-group">
 								<div class="controls row-fluid">
-									<input class="span12" type="text" name="username" id="username" placeholder="帐号">
+									<input class="span12" type="text" id="inputEmail" placeholder="邮箱">
 								</div>
 							</div>
+							
 							<div class="control-group">
 								<div class="controls row-fluid">
-									<input class="span12" type="password" name="password" id="password" placeholder="密码">
+									<input class="span12" type="password" id="inputPassword" placeholder="验证码">
 								</div>
 							</div>
 						</div>
+						
 						<div class="module-foot">
 							<div class="control-group">
 								<div class="controls clearfix">
 									<button type="submit" class="btn btn-primary pull-right">
-										进入
+										进入修改页面
 									</button>
-									
-									<label class="checkbox">
-										<input type="checkbox" name="rememberMe">记住我
-									</label>
 								</div>
 							</div>
 						</div>

@@ -51,6 +51,17 @@ public class HomeController {
 		return new ModelAndView("index");
 	}
 
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月12日
+	 * @remarks 进入注册页面
+	 */
+	@RequestMapping(value={"/register"},method=RequestMethod.GET)
+	public ModelAndView register(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		return new ModelAndView("register");
+	}
 	
 	/**
 	 * 
@@ -62,6 +73,30 @@ public class HomeController {
 	public ModelAndView login(final Model model, final HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		return new ModelAndView("login");
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月12日
+	 * @remarks 进入找回密码页面
+	 */
+	@RequestMapping(value={"/password"},method=RequestMethod.GET)
+	public ModelAndView password(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		return new ModelAndView("password");
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月12日
+	 * @remarks 进入修改密码页面
+	 */
+	@RequestMapping(value={"/newpassword"},method=RequestMethod.GET)
+	public ModelAndView newpassword(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		return new ModelAndView("newpassword");
 	}
 	
 	/**
