@@ -22,7 +22,7 @@
 	        <result column="ROLE" property="role" jdbcType="VARCHAR" />
 	        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
 	        <result column="ROLE_STATE" property="roleState" jdbcType="BIGINT" />
-	        
+	        <!-- 权限 -->
 	        <collection property="permissions" ofType="com.notebook.entities.SysPermission">
 	            <id column="PERMISSION_ID" property="permissionId" jdbcType="BIGINT" />
 		        <result column="PERMISSION_NAME" property="permissionName" jdbcType="VARCHAR" />
@@ -33,18 +33,42 @@
         </collection>
     </resultMap>
     
-    <!-- 权限 -->
+	<!-- adminIndexModel -->
+	<resultMap id="adminIndexModel" type="com.notebook.model.admin.AdminIndexModel" >
+        <result column="NEW_EVENT_NUM" property="newEventNUM" jdbcType="BIGINT" />
+        <result column="ACTIVE_USER_NUM" property="activeUserNUM" jdbcType="BIGINT" />
+        <result column="NEW_USER_NUM" property="newUserNUM" jdbcType="BIGINT" />
+        <result column="ALL_USER_NUM" property="allUserNUM" jdbcType="BIGINT" />
+    </resultMap>
     
+    <!-- 获取-管理员首页model数据 -->
+	<select id="selectAdminIndexModel" resultMap="adminIndexModel"  >
+       SELECT
+			SUM(TD1) AS 'NEW_EVENT_NUM',SUM(TD2) AS 'ACTIVE_USER_NUM',SUM(TD3) AS 'NEW_USER_NUM',SUM(TD4) AS 'ALL_USER_NUM'
+		FROM(
+			SELECT COUNT(NOTE_ID) AS 'TD1',0 AS 'TD2',0 AS 'TD3',0 AS 'TD4' FROM USER_NOTE WHERE TO_DAYS(USER_NOTE.CREATE_DATE) = TO_DAYS(now())
+			UNION ALL
+			SELECT 0 AS 'TD1',COUNT(USER_ID) AS 'TD2',0 AS 'TD3',0 AS 'TD4' FROM USER_INFO WHERE TO_DAYS(USER_INFO.LOGIN_DATE) = TO_DAYS(now())
+			UNION ALL
+			SELECT 0 AS 'TD1',0 AS 'TD2',COUNT(USER_ID) AS 'TD3',0 AS 'TD4' FROM USER_INFO WHERE DATEDIFF(USER_INFO.CREATE_DATE,NOW())=-1
+			UNION ALL
+			SELECT 0 AS 'TD1',0 AS 'TD2',0 AS 'TD3',COUNT(USER_ID) AS 'TD4' FROM USER_INFO
+			)adminIndexModel
+    </select>
+    
+    <!-- 查询用填充数据 -->
     <sql id="Base_Column_List" >
         ID, USERNAME, PASSWORD, NICKNAME, SALT, STATE, CREATE_DATE, LOGIN_DATE
     </sql>
 
+	<!-- 获取所有用户数据 -->
     <select id="selectAllUser" resultMap="UserInfoResultMap"  >
        SELECT 
        <include refid="Base_Column_List" />
 	   FROM USER_INFO
     </select>
     
+    <!-- 获取所有用户数据(包括角色信息) -->
     <select id="selectAllUserAndRole" resultMap="userRoleList">
         SELECT U.*,R.* FROM USER_INFO U 
 		LEFT JOIN MD_USER_ROLE UR ON U.ID=UR.USER_ID 
@@ -53,7 +77,7 @@
     
     <!-- 这里要修改成根据条件查询 -->
     <select id="selectUsersByPageAndCondition" resultMap="UserInfoResultMap">
-	    SELECT * FROM USER_INFO WHERE state=#{state}
+	    SELECT * FROM USER_INFO WHERE #{condtion}
 	</select>
 	
 	<!-- 获取用户数据(包括角色和权限)，根据username -->

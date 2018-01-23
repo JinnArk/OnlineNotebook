@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.notebook.util.ConstantUtil;
+
 /**
  * 
  * @author 2ing
@@ -36,7 +38,7 @@ public class HomeController {
 	@RequestMapping(value={"/unauthorized"},method=RequestMethod.GET)
 	public ModelAndView unauthorized(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
-		return new ModelAndView("403");
+		return new ModelAndView(ConstantUtil.UNAUTHORIZED);
 	}
 	
 	/**
@@ -48,7 +50,8 @@ public class HomeController {
 	@RequestMapping(value={"/","/index"},method=RequestMethod.GET)
 	public ModelAndView index(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
-		return new ModelAndView("index");
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.LOGIN);
+		return new ModelAndView(ConstantUtil.MAIN);
 	}
 
 	/**
@@ -59,8 +62,9 @@ public class HomeController {
 	 */
 	@RequestMapping(value={"/register"},method=RequestMethod.GET)
 	public ModelAndView register(final Model model, final HttpServletRequest request, HttpServletResponse response){
-		
-		return new ModelAndView("register");
+
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.REGISTER);
+		return new ModelAndView(ConstantUtil.MAIN);
 	}
 	
 	/**
@@ -72,7 +76,8 @@ public class HomeController {
 	@RequestMapping(value="/login",method=RequestMethod.GET)
 	public ModelAndView login(final Model model, final HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
-		return new ModelAndView("login");
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.LOGIN);
+		return new ModelAndView(ConstantUtil.MAIN);
 	}
 	
 	/**
@@ -83,8 +88,9 @@ public class HomeController {
 	 */
 	@RequestMapping(value={"/password"},method=RequestMethod.GET)
 	public ModelAndView password(final Model model, final HttpServletRequest request, HttpServletResponse response){
-		
-		return new ModelAndView("password");
+
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.PASSWORD);
+		return new ModelAndView(ConstantUtil.MAIN);
 	}
 	
 	/**
@@ -95,8 +101,9 @@ public class HomeController {
 	 */
 	@RequestMapping(value={"/newpassword"},method=RequestMethod.GET)
 	public ModelAndView newpassword(final Model model, final HttpServletRequest request, HttpServletResponse response){
-		
-		return new ModelAndView("newpassword");
+
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.NEWPASSWORD);		
+		return new ModelAndView(ConstantUtil.MAIN);
 	}
 	
 	/**
@@ -152,10 +159,17 @@ public class HomeController {
 		//是否验证成功
 		if(currentUser.isAuthenticated()){
 			//request.getSession().setAttribute(username, request.getRequestedSessionId());
-            return new ModelAndView("redirect:/ui/index");
+            
+            //进入-管理员/用户-页面
+            if(username.equals("admin")){
+            	return new ModelAndView(ConstantUtil.TOADMININDEX);
+            }else{
+            	return new ModelAndView(ConstantUtil.TOUSERINDEX);
+            }
+            
 		}else{
 			token.clear();
-			return new ModelAndView("redirect:/login");
+			return new ModelAndView(ConstantUtil.TOLOGIN);
 		}
 		
 		

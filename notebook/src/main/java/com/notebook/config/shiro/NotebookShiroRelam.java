@@ -132,14 +132,14 @@ public class NotebookShiroRelam extends AuthorizingRealm{
 				authorizationInfo.addStringPermission(permission.getPermissionStr());
 			}
 		}
-		System.out.println("======================已授予角色=========================");
-		for(String role:authorizationInfo.getRoles()){
-			System.out.println("=> "+role);
-		}
-		System.out.println("======================已授予权限=========================");
-		for(String permission:authorizationInfo.getStringPermissions()){
-			System.out.println("=> "+permission);
-		}
+//		System.out.println("======================已授予角色=========================");
+//		for(String role:authorizationInfo.getRoles()){
+//			System.out.println("=> "+role);
+//		}
+//		System.out.println("======================已授予权限=========================");
+//		for(String permission:authorizationInfo.getStringPermissions()){
+//			System.out.println("=> "+permission);
+//		}
 		
 		return authorizationInfo;
 	}

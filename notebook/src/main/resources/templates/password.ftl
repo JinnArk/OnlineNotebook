@@ -1,60 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>找回密码</title>
-	<link type="text/css" href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link type="text/css" href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-	<link type="text/css" href="static/css/theme.css" rel="stylesheet">
-	<link type="text/css" href="static/images/icons/css/font-awesome.css" rel="stylesheet">
-	<link type="text/css" href="static/css/googleapis_css.css" rel='stylesheet'>
-</head>
-<body>
-	<#include "head.ftl">
-
-	<div class="wrapper">
-		<div class="container">
-			<div class="row">
-				<div class="module module-login span4 offset4">
-					<form class="form-vertical">
-						<div class="module-head">
-							<h3>找回密码</h3>
-						</div>
-						
-						<div class="module-body">
-							<div class="control-group">
-								<div class="controls row-fluid">
-									<input class="span12" type="text" id="inputEmail" placeholder="邮箱">
-								</div>
-							</div>
-							
-							<div class="control-group">
-								<div class="controls row-fluid">
-									<input class="span12" type="password" id="inputPassword" placeholder="验证码">
-								</div>
-							</div>
-						</div>
-						
-						<div class="module-foot">
-							<div class="control-group">
-								<div class="controls clearfix">
-									<button type="submit" class="btn btn-primary pull-right">
-										进入修改页面
-									</button>
-								</div>
-							</div>
-						</div>
-						
-					</form>
-				</div>
-			</div>
-		</div>
+<div class="login-body">
+	<div class="login-heading">
+		<h1>修改密码</h1>
 	</div>
-
-	<#include "foot.ftl">
-	
-	<script src="static/scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
-	<script src="static/scripts/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
-	<script src="static/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-</body>
+	<div class="login-info">
+		<form>
+			<div class="col-xs-12 col-sm-12">
+				<input type="text" name="email" class="user" placeholder="邮箱">
+			</div>
+			<div class="col-xs-12 col-sm-12">
+				<input type="text" name="newpassword" class="user" placeholder="新密码">
+			</div>
+			<div class="col-xs-12 col-sm-7">
+				<input type="text" class="user" name="yzm" placeholder="验证码" required="">
+			</div>
+			<div class="col-xs-12 col-sm-5">
+				<a name="fsyzButton" href="javascript:;" class="btn btn-success">发送验证码</a>
+			</div>
+			
+			<input type="submit" name="yz" value="修改">
+			
+			<div class="signup-text">
+				<a href="/login">成功找回? 马上登录</a>
+			</div>
+		</form>
+	</div>
+</div>

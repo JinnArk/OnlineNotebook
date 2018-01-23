@@ -11,5 +11,5 @@ function getBgStr(){
 	var x = 3;
 	var y = 1;
 	var rand = parseInt(Math.random() * (x - y + 1) + y);
-	return "url( ../notebook/images/lg-bg/bg_"+rand+".jpg )";
+	return "url( static/images/lg-bg/bg_"+rand+".jpg )";
 }

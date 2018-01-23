@@ -5,11 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 
 public class UserInfo implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	@TableId
     private int userId;
 
     private int uuid;

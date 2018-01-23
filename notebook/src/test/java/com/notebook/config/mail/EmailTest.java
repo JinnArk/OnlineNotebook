@@ -15,23 +15,23 @@ import com.notebook.util.EmailUtil;
 @SpringBootTest
 public class EmailTest {
 	
-	@Test
-	public void sendMail(){
-		try {
-			EmailUtil.emailUtilSet("smtp.exmail.qq.com", "2ing@2inger.top", "Qq7788990");
-			
-			EmailUtil.sentEmail("252631706@qq.com", "关于2ing对于我司产品的投诉", "投诉结果：无效，详情请见，www.xxx.com/wtf");
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-		}  catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
+//	@Test
+//	public void sendMail(){
+//		try {
+//			EmailUtil.emailUtilSet("smtp.exmail.qq.com", "2ing@2inger.top", "Qq7788990");
+//			
+//			EmailUtil.sentEmail("252631706@qq.com", "关于2ing对于我司产品的投诉", "投诉结果：无效，详情请见，www.xxx.com/wtf");
+//		} catch (GeneralSecurityException e) {
+//			e.printStackTrace();
+//		}  catch (MessagingException e) {
+//			e.printStackTrace();
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//	}
 	
 	@Test
 	public void connectMail(){

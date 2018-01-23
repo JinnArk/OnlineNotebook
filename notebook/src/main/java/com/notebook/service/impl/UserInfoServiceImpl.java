@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.notebook.dao.UserInfoMapper;
 import com.notebook.entities.UserInfo;
+import com.notebook.model.admin.AdminIndexModel;
 import com.notebook.service.UserInfoService;
 
+
 @Service
-public class UserInfoSerViceImpl implements UserInfoService{
+public class UserInfoServiceImpl implements UserInfoService{
 
 	@Autowired
 	private UserInfoMapper userInfoMapper;
@@ -39,5 +41,17 @@ public class UserInfoSerViceImpl implements UserInfoService{
 	@Override
 	public UserInfo getUserInfoByUsername(String username) {
 		return userInfoMapper.selectUserInfoByUsername(username);
+	}
+
+	@Override
+	public AdminIndexModel getAdminIndexModel() throws Exception {
+		
+		return userInfoMapper.selectAdminIndexModel();
+	}
+
+	@Override
+	public int saveUserInfo(UserInfo user) throws Exception {
+		
+		return userInfoMapper.updateById(user);
 	}
 }

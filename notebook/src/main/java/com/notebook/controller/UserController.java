@@ -26,6 +26,8 @@ public class UserController {
 	@RequestMapping(value="/index", method=RequestMethod.GET)
 	public ModelAndView userIndex(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
+		//userInfoService.getUserInfoByID(9527);
+		
 		return new ModelAndView("/ui/index");
 	}
 	

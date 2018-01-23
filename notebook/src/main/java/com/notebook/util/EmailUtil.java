@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMessage;
 
 import com.sun.mail.util.MailSSLSocketFactory;
 
-public class EmailUtil{
+public final class EmailUtil{
 	
 	//邮箱属性
 	static private Properties prop = new Properties();

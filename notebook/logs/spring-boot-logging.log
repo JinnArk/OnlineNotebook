@@ -1,0 +1,23 @@
+2018-01-23 19:35:35.834  INFO 7080 --- [main] com.notebook.NotebookApplication         : Starting NotebookApplication on 2ing with PID 7080 (D:\eclipse4.3\github\self\notebook\notebook\notebook\target\classes started by Administrator in D:\eclipse4.3\github\self\notebook\notebook\notebook)
+2018-01-23 19:35:35.839  INFO 7080 --- [main] com.notebook.NotebookApplication         : No active profile set, falling back to default profiles: default
+2018-01-23 19:35:40.275  WARN 7080 --- [main] c.b.mybatisplus.toolkit.TableInfoHelper  : Warn: Could not find @TableId in Class: com.notebook.entities.SysNotice.
+2018-01-23 19:35:40.276  WARN 7080 --- [main] c.b.mybatisplus.mapper.AutoSqlInjector   : class com.notebook.entities.SysNotice ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2018-01-23 19:35:40.402  WARN 7080 --- [main] c.b.mybatisplus.toolkit.TableInfoHelper  : Warn: Could not find @TableId in Class: com.notebook.entities.UserInfo.
+2018-01-23 19:35:40.402  WARN 7080 --- [main] c.b.mybatisplus.mapper.AutoSqlInjector   : class com.notebook.entities.UserInfo ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2018-01-23 19:35:40.497  WARN 7080 --- [main] c.b.mybatisplus.toolkit.TableInfoHelper  : Warn: Could not find @TableId in Class: com.notebook.entities.UserLoginrecord.
+2018-01-23 19:35:40.497  WARN 7080 --- [main] c.b.mybatisplus.mapper.AutoSqlInjector   : class com.notebook.entities.UserLoginrecord ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2018-01-23 19:35:40.774  INFO 7080 --- [main] o.a.shiro.cache.ehcache.EhCacheManager   : Cache with name 'com.notebook.config.shiro.NotebookShiroRelam.authorizationCache' does not yet exist.  Creating now.
+2018-01-23 19:35:40.776  INFO 7080 --- [main] o.a.shiro.cache.ehcache.EhCacheManager   : Added EhCache named [com.notebook.config.shiro.NotebookShiroRelam.authorizationCache]
+2018-01-23 19:35:42.239  INFO 7080 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2018-01-23 19:35:42.241  INFO 7080 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.23
+2018-01-23 19:35:42.496  INFO 7080 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2018-01-23 19:35:43.487  WARN 7080 --- [main] c.b.mybatisplus.toolkit.TableInfoHelper  : Warn: Could not find @TableId in Class: com.notebook.entities.SysLetter.
+2018-01-23 19:35:43.488  WARN 7080 --- [main] c.b.mybatisplus.mapper.AutoSqlInjector   : class com.notebook.entities.SysLetter ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2018-01-23 19:35:43.578  WARN 7080 --- [main] c.b.mybatisplus.toolkit.TableInfoHelper  : Warn: Could not find @TableId in Class: com.notebook.entities.UserFavorite.
+2018-01-23 19:35:43.579  WARN 7080 --- [main] c.b.mybatisplus.mapper.AutoSqlInjector   : class com.notebook.entities.UserFavorite ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2018-01-23 19:35:43.666  WARN 7080 --- [main] c.b.mybatisplus.toolkit.TableInfoHelper  : Warn: Could not find @TableId in Class: com.notebook.entities.UserNote.
+2018-01-23 19:35:43.667  WARN 7080 --- [main] c.b.mybatisplus.mapper.AutoSqlInjector   : class com.notebook.entities.UserNote ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2018-01-23 19:35:43.786  WARN 7080 --- [main] c.b.mybatisplus.toolkit.TableInfoHelper  : Warn: Could not find @TableId in Class: com.notebook.entities.UserNotetag.
+2018-01-23 19:35:43.786  WARN 7080 --- [main] c.b.mybatisplus.mapper.AutoSqlInjector   : class com.notebook.entities.UserNotetag ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2018-01-23 19:35:47.095  INFO 7080 --- [main] com.notebook.NotebookApplication         : Started NotebookApplication in 11.92 seconds (JVM running for 13.129)
+2018-01-23 19:35:52.729  INFO 7080 --- [http-nio-7878-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring FrameworkServlet 'dispatcherServlet'

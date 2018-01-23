@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.notebook.dao.UserLoginRecordMapper" >
+	<!-- 公告-->
+    <resultMap id="loginrecord" type="com.notebook.entities.UserLoginrecord" >
+    
+	</resultMap>
+	<!-- 登录记录model -->
+    <resultMap id="loginRecordModel" type="com.notebook.model.common.LoginRecordModel" >
+        <result column="LOGIN_IP" property="loginIP" jdbcType="VARCHAR" />
+        <result column="LOGIN_DATE" property="loginDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+   <!-- 获取-后台首页-最新四条用户登录数据 -->
+	<select id="selectIndexLoginRecordModel" resultMap="loginRecordModel">
+    	SELECT LOGIN_IP,LOGIN_DATE 
+		FROM USER_LOGINRECORD 
+		WHERE USER_ID = #{userID}
+		ORDER BY LOGIN_DATE DESC 
+		LIMIT 0,4
+	</select>
+</mapper>

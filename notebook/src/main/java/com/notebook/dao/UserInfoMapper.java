@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.notebook.config.mybatis.plus.SuperMapper;
 import com.notebook.entities.UserInfo;
+import com.notebook.model.admin.AdminIndexModel;
   
 
 /**
@@ -47,4 +48,12 @@ public interface UserInfoMapper extends SuperMapper<UserInfo>{
 	 * @remarks 获取用户数据，根据分页信息和条件
 	 */
 	List<UserInfo> selectUsersByPageAndCondition(Pagination page, String condtion);
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月23日
+	 * @remarks 获取-管理员首页model数据
+	 */
+	AdminIndexModel selectAdminIndexModel() throws Exception;
 }

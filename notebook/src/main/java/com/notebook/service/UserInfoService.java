@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.notebook.entities.UserInfo;
+import com.notebook.model.admin.AdminIndexModel;
 
 /**
  * 
@@ -52,4 +53,20 @@ public interface UserInfoService {
 	  * @remarks 获取用户信息，根据分页信息和条件
 	  */
 	 Page<UserInfo> getUsersByPageAndCondition(Page<UserInfo> page, String condition);
+	 
+	 /**
+	  * 
+	  * @author 2ing
+	  * @createTime 2018年1月23日
+	  * @remarks 获取-管理员首页model
+	  */
+	 AdminIndexModel getAdminIndexModel() throws Exception;
+	 
+	 /**
+	  * 
+	  * @author 2ing
+	  * @createTime 2018年1月23日
+	  * @remarks 保存用户信息
+	  */
+	 int saveUserInfo(UserInfo user) throws Exception;
 }
