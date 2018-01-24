@@ -4,11 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import javax.mail.MessagingException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.notebook.config.email.EmailConfig;
 import com.notebook.util.EmailUtil;
 
 @RunWith(value = SpringRunner.class)
@@ -36,7 +38,11 @@ public class EmailTest {
 	@Test
 	public void connectMail(){
 		try {
-			EmailUtil.emailUtilSet("smtp.exmail.qq.com", "2ing@2inger.top", "Qq7788990");
+//			System.out.println(EmailConfig.getHost());
+//			System.out.println(EmailConfig.getUsername());
+//			System.out.println(EmailConfig.getPassword());
+			EmailUtil.emailUtilSet(EmailConfig.getHost(), EmailConfig.getUsername(), EmailConfig.getPassword());
+			//EmailUtil.emailUtilSet("smtp.exmail.qq.com", "2ing@2inger.top", "Qq7788990");
 			EmailUtil.connectTest();
 			System.out.println("连接成功");
 		}catch (Exception e) {

@@ -21,6 +21,9 @@ public final class ConstantUtil {
 	public static final String AJAX_FAIL = "fail";
 	public static final String AJAX_ERROR = "error";
 	
+	public static final String PAGEMODEL_URL = "pageModelUrl";
+	public static final String PAGEMODEL_PARAM = "pageModelParam";
+	
 	//HomeController
 	public static final String UNAUTHORIZED = "403";
 	public static final String MAIN = "main";
@@ -37,13 +40,23 @@ public final class ConstantUtil {
 	public static final String SYSTEMMAIL = "/admin/systemMail";
 	public static final String USERINFOS = "/admin/userInfos";
 	
+	public static final String NOTICESPAGE = "/admin/notices";
+	public static final String NOTICES = "notices";
+	public static final String NOTICESURL = "/admin/notices";
+	
 	public static final String NOTES = "/admin/notes";
 	
 	public static final String NOTETAGS = "/admin/noteTags";
 	
+		//index
 	public static final String ADMININDEXMODEL = "adminIndexModel";
-	public static final String NOTICES = "notices";
-	public static final String LOGINRECORDS = "loginRecords";
+	public static final String NOTICEMODELS = "notices";
+	public static final String LOGINRECORDMODELS = "loginRecords";
+		//email
+	public static final String EMAILHOST = "emailHost";
+	public static final String EMAILUSERNAME = "emailUserName";
+	public static final String EMAILPASSWORD = "emailPassword";
+	public static final String TOSYSTEMMAIL = "redirect:/admin/systemMail";
 	
 	//LetterController
 	public static final String LETTER_UNREAD = "/commons/letterUnread";

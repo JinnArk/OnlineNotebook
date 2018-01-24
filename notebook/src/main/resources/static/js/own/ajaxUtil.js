@@ -44,4 +44,12 @@ function handle(object, ident) {
 			//location.reload();
 		}
 	}
+	
+	if (ident == "emailConnectTest") {
+		alert("emailConnectTest");
+		alert(object);
+		if (object == "1") {
+		} else {
+		}
+	}
 }

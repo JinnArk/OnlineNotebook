@@ -11,7 +11,7 @@
 					<div class="form-title">
 						<h4>修改密码 :</h4>
 					</div>
-					<div class="form-three widget-shadow">
+					<div class="form-three widget-shadow" id="repasswordForm">
 						<div class=" panel-body-inputin">
 							<form class="form-horizontal">
 								
@@ -35,7 +35,8 @@
 											<span class="input-group-addon">
 												<i class="fa fa-envelope-o"></i>
 											</span>
-											<input name="newpassword" class="form-control1" type="text" placeholder="新密码">
+											<input name="password" class="form-control1" type="text" placeholder="新密码"
+											sucmsg="用户名验证通过！" nullmsg="请输入新密码！" errormsg="请用邮箱或手机号码注册！">
 										</div>
 									</div>
 									
@@ -48,7 +49,7 @@
 											<span class="input-group-addon">
 												<i class="fa fa-envelope-o"></i>
 											</span>
-											<input name="newpassword2" class="form-control1" type="text" placeholder="请重复一边新密码">
+											<input name="repassword" class="form-control1" type="text" placeholder="请重复一边新密码">
 										</div>
 									</div>
 									
@@ -71,3 +72,5 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript" src="http://validform.rjboy.cn/Validform/v5.1/Validform_v5.1_min.js"></script>

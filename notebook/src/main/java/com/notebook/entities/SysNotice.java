@@ -2,7 +2,11 @@ package com.notebook.entities;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+
 public class SysNotice {
+	
+	@TableId
     private Integer noticeId;
 
     private String noticeTitle;

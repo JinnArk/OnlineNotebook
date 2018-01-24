@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.notebook.dao.NoticeMapper" >
-	<!-- 公告-->
-    <resultMap id="notice" type="com.notebook.entities.SysNotice" >
-    
-	</resultMap>
 	<!-- 公告model -->
     <resultMap id="noticeModel" type="com.notebook.model.common.NoticeModel" >
         <result column="NOTICE_ID" property="noticeID" jdbcType="BIGINT" />
@@ -20,5 +16,20 @@
 		FROM SYS_NOTICE
 		ORDER BY CREATE_DATE DESC
 		LIMIT 0,2
+	</select>
+	
+	<!-- 根据pageModel和condition获取公告数据 -->
+	<select id="selectNoticesByPageAndCondition" resultMap="noticeModel">
+		SELECT NOTICE_ID,NOTICE_TITLE,NOTICE_CONTENT,CREATE_DATE,MODIFY_DATE
+		FROM SYS_NOTICE 
+		<where>
+		  ${ew.sqlSegment}
+		</where>
+		ORDER BY CREATE_DATE DESC
+	</select>
+	<select id="selectNoticesByPage" resultMap="noticeModel">
+		SELECT NOTICE_ID,NOTICE_TITLE,NOTICE_CONTENT,CREATE_DATE,MODIFY_DATE
+		FROM SYS_NOTICE
+		ORDER BY CREATE_DATE DESC
 	</select>
 </mapper>

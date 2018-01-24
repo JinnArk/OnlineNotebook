@@ -12,18 +12,27 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.notebook.config.email.EmailConfig;
 import com.sun.mail.util.MailSSLSocketFactory;
 
+/**
+ * 
+ * @author 2ing
+ * @createTime 2018年1月24日
+ * @remarks 邮件发送工具类
+ */
 public final class EmailUtil{
+	
+	private EmailUtil() {}
 	
 	//邮箱属性
 	static private Properties prop = new Properties();
 	//邮件会话
 	static private Session session;
 	
-	static private String host;//邮箱服务器
-	static private String username;//发送者邮箱
-	static private String password;//邮箱密码
+	//EmailConfig.getHost();//邮箱服务器
+	//EmailConfig.getUsername();//发送者邮箱
+	//EmailConfig.getPassword();//邮箱密码
 	
 	/**
 	 * 
@@ -51,9 +60,10 @@ public final class EmailUtil{
      * @remarks 设置邮箱属性
      */
     public static void emailUtilSet(String newHost, String newUsername, String newPassword) throws Exception{
-    	host = newHost;
-    	username = newUsername;
-    	password = newPassword;
+    	//设置配置文件中数据
+    	EmailConfig.setHost(newHost);
+    	EmailConfig.setUsername(newUsername);
+    	EmailConfig.setPassword(newPassword);
     	
     	emailUtilInit();//设置之后进行初始化
     }
@@ -73,7 +83,7 @@ public final class EmailUtil{
 	     //协议
 	     prop.setProperty("mail.transport.protocol", "smtp");
 	     //服务器
-	     prop.setProperty("mail.smtp.host", host);
+	     prop.setProperty("mail.smtp.host", EmailConfig.getHost());
 	     //端口
 	     prop.setProperty("mail.smtp.port", "465");
 	     //使用smtp身份验证
@@ -87,7 +97,7 @@ public final class EmailUtil{
 	     prop.put("mail.smtp.ssl.enable", "true");
 	     prop.put("mail.smtp.ssl.socketFactory", sf);
 	     
-    	 session = Session.getDefaultInstance(prop, new MyAuthenricator(username, password));
+    	 session = Session.getDefaultInstance(prop, new MyAuthenricator(EmailConfig.getUsername(), EmailConfig.getPassword()));
 	     //session.setDebug(true);//打印debug信息
     }
     
@@ -99,8 +109,14 @@ public final class EmailUtil{
      */
     public static void connectTest() throws Exception{
     	Store store = session.getStore();//获取测试实体
-    	store.connect(host,username,password);//若抛出异常则连接失败
+    	store.connect(EmailConfig.getHost(),EmailConfig.getUsername(),EmailConfig.getPassword());//若抛出异常则连接失败
     	store.close();//关闭测试连接
+    }
+    public static void emailconnectTest(String host, String username, String password) throws Exception{
+    	emailUtilInit();
+    	Store store = session.getStore();
+    	store.connect(host,username,password);
+    	store.close();
     }
     
     /**
@@ -112,7 +128,7 @@ public final class EmailUtil{
     public static void sentEmail(String tomail, String mailTitle, String mailContent) throws Exception{
     	
 		MimeMessage mimeMessage = new MimeMessage(session);   
-		mimeMessage.setFrom(new InternetAddress(username));
+		mimeMessage.setFrom(new InternetAddress(EmailConfig.getUsername()));
 
 		mimeMessage.setSentDate(new Date());
 		

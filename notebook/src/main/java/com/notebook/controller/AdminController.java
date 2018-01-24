@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.baomidou.mybatisplus.plugins.Page;
+import com.notebook.config.email.EmailConfig;
 import com.notebook.entities.UserInfo;
 import com.notebook.model.admin.AdminIndexModel;
 import com.notebook.model.common.LoginRecordModel;
@@ -23,7 +25,9 @@ import com.notebook.service.NoticeService;
 import com.notebook.service.UserInfoService;
 import com.notebook.service.UserLoginRecordService;
 import com.notebook.util.ConstantUtil;
+import com.notebook.util.EmailUtil;
 import com.notebook.util.PasswordUtil;
+import com.notebook.util.StringUtil;
 
 @Controller
 @RequestMapping(value="/admin")
@@ -53,8 +57,8 @@ public class AdminController {
 			List<LoginRecordModel> loginRecords = userLoginRecordService.getIndexLoginRecordModel(user.getUserId());
 
 			model.addAttribute(ConstantUtil.ADMININDEXMODEL, adminIndexModel);
-			model.addAttribute(ConstantUtil.NOTICES, notices);
-			model.addAttribute(ConstantUtil.LOGINRECORDS, loginRecords);
+			model.addAttribute(ConstantUtil.NOTICEMODELS, notices);
+			model.addAttribute(ConstantUtil.LOGINRECORDMODELS, loginRecords);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,8 +76,54 @@ public class AdminController {
 	@RequestMapping(value="/systemMail", method=RequestMethod.GET)
 	public ModelAndView systemMail(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
+		model.addAttribute(ConstantUtil.EMAILHOST, EmailConfig.getHost());
+		model.addAttribute(ConstantUtil.EMAILUSERNAME, EmailConfig.getUsername());
+		model.addAttribute(ConstantUtil.EMAILPASSWORD, EmailConfig.getPassword());
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.SYSTEMMAIL);
 		return new ModelAndView(ConstantUtil.ADMINMAIN);
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月24日
+	 * @remarks AJAX测试公用email账号
+	 */
+	@RequestMapping(value = "/emailConnectTest", method = RequestMethod.POST)
+    @ResponseBody
+    public String emailConnectTest(String host,String username, String password) {
+		
+		try {
+			EmailUtil.emailconnectTest(host, username, password);
+			return ConstantUtil.AJAX_SUCCESS;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ConstantUtil.AJAX_ERROR;
+		}
+	}
+		
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月24日
+	 * @remarks 保存邮箱信息
+	 */
+	@RequestMapping(value="/emailSave", method=RequestMethod.POST)
+	public ModelAndView emailSave(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		
+		String host = request.getParameter("emailHost");
+		String username = request.getParameter("emailUserName");
+		String password = request.getParameter("emailPassword");
+		
+		try {
+			EmailUtil.emailUtilSet(host, username, password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ModelAndView(ConstantUtil.TOSYSTEMMAIL);
 	}
 	
 	/**
@@ -89,30 +139,96 @@ public class AdminController {
 		return new ModelAndView(ConstantUtil.ADMINMAIN);
 	}
 	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月24日
+	 * @remarks AJAX修改密码
+	 */
 	@RequestMapping(value = "/newpassword", method = RequestMethod.POST)
     @ResponseBody
-    public String newpassword(String newpassword) {
-		//System.out.println(newpassword);
-		//System.out.println(PasswordUtil.encryptPassword(newpassword));
+    public String newpassword(String oldpassword,String newpassword) {
 		
 		try {
 			String salt = PasswordUtil.createSalt();
 			//获取当前用户
 	 		UserInfo user = (UserInfo)SecurityUtils.getSubject().getPrincipal();
-	 		user.setSalt(salt);
-	 		user.setPassword(PasswordUtil.encryptPassword(newpassword,salt));
+			if(PasswordUtil.encryptPassword(oldpassword,user.getSalt()).equals(user.getPassword())){//旧密码是否正确
+		 		user.setSalt(salt);
+		 		user.setPassword(PasswordUtil.encryptPassword(newpassword,salt));
+		 		userInfoService.saveUserInfo(user);
+				//int result = userInfoService.saveUserInfo(user);//影响行数
+				return ConstantUtil.AJAX_SUCCESS;
+				
+			}else{
+				return ConstantUtil.AJAX_FAIL;
+			}
 	 		
-	 		//userInfoService.getUserInfoByID(user.getUserId());
-	 		
-	 		//影响行数
-			int result = userInfoService.saveUserInfo(user);
 			
-			//System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ConstantUtil.AJAX_ERROR;
+		}
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月22日
+	 * @remarks 公告管理
+	 */
+	@RequestMapping(value="/notices", method=RequestMethod.GET)
+	public ModelAndView notices(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		String noticeTitle = request.getParameter("noticeTitle");
+		String pagenow = request.getParameter("pagenow");
+		
+		Page<NoticeModel> noticesPage = null;
+		if(!StringUtil.isEmpty(pagenow)){
+			noticesPage = new Page<NoticeModel>(Integer.valueOf(pagenow).intValue(), 5);
+		}else{
+			noticesPage = new Page<NoticeModel>(1, 5);
+		}
+		
+		try {
+			noticesPage = noticeService.getNoticeModelsByPageAndCondition(noticesPage, noticeTitle);
+			noticesPage.setTotal(noticeService.getAllNoticeNumByCondition(noticeTitle));
+			
+			//pagemodel
+			model.addAttribute(ConstantUtil.NOTICES, noticesPage);
+			//用于pagemodel跳转的url
+			model.addAttribute(ConstantUtil.PAGEMODEL_URL, ConstantUtil.NOTICESURL);
+			//url参数
+			if(!StringUtil.isEmpty(noticeTitle)){
+				model.addAttribute(ConstantUtil.PAGEMODEL_PARAM, "noticeTitle="+noticeTitle);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.NOTICESPAGE);
+		return new ModelAndView(ConstantUtil.ADMINMAIN);
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月22日
+	 * @remarks 公告删除
+	 */
+	@RequestMapping(value="/noticeDelete", method=RequestMethod.GET)
+	public ModelAndView noticeDelete(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		String noticeId = request.getParameter("noticeId");
+		try {
+			noticeService.deleteNoticeById(noticeId);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ConstantUtil.AJAX_SUCCESS;
+		
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.NOTICESPAGE);
+		return new ModelAndView(ConstantUtil.ADMINMAIN);
 	}
 	
 	/**
@@ -136,7 +252,7 @@ public class AdminController {
 	 */
 	@RequestMapping(value="/notes", method=RequestMethod.GET)
 	public ModelAndView note(final Model model, final HttpServletRequest request, HttpServletResponse response){
-		
+	
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.NOTES);
 		return new ModelAndView(ConstantUtil.ADMINMAIN);
 	}

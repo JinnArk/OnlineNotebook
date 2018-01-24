@@ -27,7 +27,7 @@
 					</li>
 					
 					<li>
-						<a href="javascript:;"><i class="fa fa-th-large nav_icon"></i>
+						<a href="/admin/notices"><i class="fa fa-th-large nav_icon"></i>
 							公告管理
 						</a>
 					</li>

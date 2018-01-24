@@ -17,7 +17,7 @@ public class PasswordUtil {
 		for(int i=0;i<6;i++){
 			int intVal=(int)(Math.random()*26+97);
 			//salt=salt+(char)intVal;
-			salt.append(intVal);
+			salt.append((char)intVal);
 		}
 		return salt.toString();
 	}
