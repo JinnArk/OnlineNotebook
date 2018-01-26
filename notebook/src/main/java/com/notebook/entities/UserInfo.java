@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.notebook.util.DateUtil;
 
 public class UserInfo implements Serializable{
 
@@ -98,16 +99,16 @@ public class UserInfo implements Serializable{
         this.state = state;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getCreateDate() {
+        return DateUtil.dateToString(createDate);
     }
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Date getLoginDate() {
-        return loginDate;
+    public String getLoginDate() {
+        return DateUtil.dateToString(loginDate);
     }
 
     public void setLoginDate(Date loginDate) {

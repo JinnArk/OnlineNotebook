@@ -37,7 +37,13 @@ public class NotebookShiroRelam extends AuthorizingRealm{
 //		System.out.println(username);
 //		System.out.println(token.getCredentials());
 		
-		UserInfo userInfo = userInfoService.getUserInfoByUsername(username);
+		UserInfo userInfo = null;
+		try {
+			userInfo = userInfoService.getUserInfoByUsername(username);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 		
 //		System.out.println("====================用户信息======================");
 //		

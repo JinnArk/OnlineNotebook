@@ -33,10 +33,9 @@
 					</li>
 					
 					<li>
-						<a href="/admin/userInfo"><i class="fa fa-book nav_icon"></i>
-							用户管理 <!--<span class="fa arrow"></span>-->
+						<a href="javascript:;"><i class="fa fa-book nav_icon"></i>
+							用户管理 <span class="fa arrow"></span>
 						</a>
-						<!--
 						<ul class="nav nav-second-level collapse">
 							<li>
 								<a href="/admin/notes">事件管理</a>
@@ -45,9 +44,9 @@
 								<a href="/admin/noteTags">标签管理</a>
 							</li>
 							<li>
-								<a href="/admin/userInfo">查询用户</a>
+								<a href="/admin/userInfo">用户管理</a>
 							</li>
-						</ul>-->
+						</ul>
 						<!-- /nav-second-level -->
 					</li>
 					

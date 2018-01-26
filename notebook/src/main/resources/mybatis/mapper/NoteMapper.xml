@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.notebook.dao.UserNoteMapper" >
+	<resultMap id="note" type="com.notebook.entities.UserNote" >
+        <id column="NOTE_ID" property="noteId" jdbcType="BIGINT" />
+        <result column="NOTETAG_ID" property="notetagId" jdbcType="BIGINT" />
+        <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+        <result column="NOTE_TITLE" property="noteTitle" jdbcType="VARCHAR" />
+        <result column="NOTE_CONTENT" property="noteContent" jdbcType="VARCHAR" />
+        <result column="NOTE_STATE" property="noteState" jdbcType="BIGINT" />
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+	<!-- 根据pageModel和condition获取事件Notice数据 -->
+	<select id="selectNoteByPageAndCondition" resultMap="note">
+		SELECT * FROM USER_NOTE
+		<where>
+		  ${ew.sqlSegment}
+		</where>
+		ORDER BY CREATE_DATE DESC
+	</select>
+	
+	<!-- 批量修改事件Notice状态 -->
+	<update id="updateNotesState" parameterType="java.lang.String" >
+		UPDATE USER_NOTE SET NOTE_STATE=#{state}
+		WHERE USER_ID IN        
+		<foreach collection="noteIDs"	open="(" close=")" separator="," item="noteID" index="index">  
+            #{noteID}  
+        </foreach>  
+	</update>
+
+</mapper>

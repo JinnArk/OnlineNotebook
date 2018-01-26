@@ -10,8 +10,8 @@
         <result column="NICKNAME" property="nickname" jdbcType="VARCHAR" />
         <result column="SALT" property="salt" jdbcType="VARCHAR" />
         <result column="STATE" property="state" jdbcType="BIGINT" />
-        <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
-        <result column="LOGIN_DATE" property="loginDate" jdbcType="DATE" />
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="LOGIN_DATE" property="loginDate" jdbcType="TIMESTAMP" />
     </resultMap>
         
     <!-- 角色 -->
@@ -75,9 +75,13 @@
 		LEFT JOIN SYS_ROLE R ON R.ID=UR.ROLE_ID;
     </select>
     
-    <!-- 这里要修改成根据条件查询 -->
+    <!--  根据pagemodel和条件查询用户数据 -->
     <select id="selectUsersByPageAndCondition" resultMap="UserInfoResultMap">
-	    SELECT * FROM USER_INFO WHERE #{condtion}
+	    SELECT * FROM USER_INFO 
+		<where>
+		  ${ew.sqlSegment}
+		</where>
+		ORDER BY CREATE_DATE DESC
 	</select>
 	
 	<!-- 获取用户数据(包括角色和权限)，根据username -->

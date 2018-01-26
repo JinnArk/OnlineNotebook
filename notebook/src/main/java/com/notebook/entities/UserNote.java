@@ -2,7 +2,11 @@ package com.notebook.entities;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.notebook.util.DateUtil;
+
 public class UserNote {
+	@TableId
     private Integer noteId;
 
     private Integer notetagId;
@@ -59,16 +63,16 @@ public class UserNote {
         this.noteState = noteState;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getCreateDate() {
+        return DateUtil.dateToString(createDate);
     }
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Date getModifyDate() {
-        return modifyDate;
+    public String getModifyDate() {
+        return DateUtil.dateToString(modifyDate);
     }
 
     public void setModifyDate(Date modifyDate) {

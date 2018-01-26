@@ -7,3 +7,18 @@
     outline: none;
     font-weight: 600;
 }
+
+.hidden_button{
+	visibility:hidden;
+}
+
+@media screen and (max-device-width: 400px) {
+ 
+	.mobileTableFont{
+		font-size:1px;
+	}
+	
+	.hidden_button{
+		visibility:visible;
+	}
+}

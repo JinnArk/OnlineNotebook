@@ -15,14 +15,15 @@
 									<h4>用户查询</h4>
 								</div>
 								<div class="form-body" data-example-id="simple-form-inline">
-									<form class="form-inline"> 
+									<form class="form-inline" action="/admin/userInfo" method="get"> 
 										
 										<div class="form-group">
-											<label for="exampleInputEmail2">用户名称：</label> 
-											<input type="email" class="form-control" id="exampleInputEmail2" placeholder="mail.abc@example.com">
+											<label for="exampleInputEmail2">用户账号：</label> 
+											<input class="form-control" 
+												id="username" name="username" placeholder="mail.abc@example.com">
 										</div>
 										
-										<a href="javascript:;" class="hvr-outline-in btn btn-info">快速搜索</a>
+										<button type="sumbit" class="hvr-outline-in btn btn-info">快速搜索</button>
 									</form> 
 								</div>
 							</div>
@@ -31,36 +32,34 @@
 					
 					<div class="panel panel-widget">
 						<div class="tables">
-							<table class="table table-hover"> 
+							<table class="table table-hover mobileTableFont"> 
 								<thead> 
 									<tr>
-										<th>#</th> <th>用户名称</th> <th>创建时间</th> <th>可用操作</th> 
+										<th>用户账号</th> <th>创建时间</th> <th>最近登录时间</th> <th>可用操作</th> <th>相关信息</th>
 									</tr> 
 								</thead> 
-								<tbody> 
+								<tbody>
+									<#list pageModels.records as userInfo>
 									<tr> 
-										<th scope="row">1</th> <td>Mark</td> <td>Otto</td> 
+										<td>${userInfo.username}</td> <td>${userInfo.createDate}</td> <td>${userInfo.loginDate}</td>
 										<td>
-											<a href="javascript:;" class="label label-success">允许登录</a>
-											<a href="javascript:;" class="label label-danger">禁止登录</a>
+											<#if userInfo.state==0>
+											<a href="/admin/userToOpen?userID=${userInfo.userId?c}" class="label label-success">允许登录</a>
+											<#else>
+											<a href="/admin/userToClose?userID=${userInfo.userId?c}" class="label label-danger">禁止登录</a>
+											</#if>
 										</td> 
-									</tr> 
-									<tr> 
-										<th scope="row">2</th> <td>Jacob</td> <td>Thornton</td> 
 										<td>
-											<a href="javascript:;" class="label label-success">允许登录</a>
-											<a href="javascript:;" class="label label-danger">禁止登录</a>
-										</td> 
-									</tr> 
+											<a href="/admin/noteTags?userID=${userInfo.userId?c}" class="label label-primary">标签</a>
+											<a href="/admin/notes?userID=${userInfo.userId?c}" class="label label-warning">事件</a>
+										</td>
+									</tr>
+									</#list>
 								</tbody> 
 							</table>
 						</div>
 						
-						<div class="but_list">
-						   <div class="alert alert-danger" role="alert">
-							<strong>是空的</strong> 请检查你所输入的搜索信息
-						   </div>
-						 </div>
+						<#include "../commons/pageModel.ftl">
 					</div>
 				</div>
 				<!--//typography-->

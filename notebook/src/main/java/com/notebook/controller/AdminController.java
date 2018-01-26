@@ -20,12 +20,16 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.notebook.config.email.EmailConfig;
 import com.notebook.entities.SysNotice;
 import com.notebook.entities.UserInfo;
+import com.notebook.entities.UserNote;
+import com.notebook.entities.UserNotetag;
 import com.notebook.model.admin.AdminIndexModel;
 import com.notebook.model.common.LoginRecordModel;
 import com.notebook.model.common.NoticeModel;
 import com.notebook.service.NoticeService;
 import com.notebook.service.UserInfoService;
 import com.notebook.service.UserLoginRecordService;
+import com.notebook.service.UserNoteService;
+import com.notebook.service.UserNoteTagService;
 import com.notebook.util.CommonUtil;
 import com.notebook.util.ConstantUtil;
 import com.notebook.util.EmailUtil;
@@ -42,6 +46,10 @@ public class AdminController {
 	NoticeService noticeService;
 	@Autowired
 	UserLoginRecordService userLoginRecordService;
+	@Autowired
+	UserNoteService userNoteService;
+	@Autowired
+	UserNoteTagService userNoteTagService;
 
 	/**
 	 * 
@@ -301,8 +309,72 @@ public class AdminController {
 	@RequestMapping(value="/userInfo", method=RequestMethod.GET)
 	public ModelAndView userInfo(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
+		try {
+			String pagenow = request.getParameter("pagenow");
+			String username = request.getParameter("username");
+			//UserInfo user = (UserInfo)SecurityUtils.getSubject().getPrincipal();
+			
+			Page<UserInfo> userInfosPage = null;
+			if(!StringUtil.isEmpty(pagenow)){
+				userInfosPage = new Page<UserInfo>(Integer.valueOf(pagenow).intValue(), 5);
+			}else{
+				userInfosPage = new Page<UserInfo>(1,5);
+			}
+			
+			userInfosPage = userInfoService.getUsersByPageAndCondition(userInfosPage, username);
+			userInfosPage.setTotal(userInfoService.getAllUsersNumByCondition(username));
+
+			//用于pagemodel跳转的url
+			model.addAttribute(ConstantUtil.PAGEMODEL_URL, ConstantUtil.USERINFOSURL);
+			if(!StringUtil.isEmpty(username)){
+				//url参数
+				model.addAttribute(ConstantUtil.PAGEMODEL_PARAM, "username="+username);
+			}
+			model.addAttribute(ConstantUtil.PAGEMODELS, userInfosPage);
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.USERINFOS);
 		return new ModelAndView(ConstantUtil.ADMINMAIN);
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月26日
+	 * @remarks 禁止/允许用户登录(改变用户状态0/1)
+	 */
+	@RequestMapping(value="/userToClose", method=RequestMethod.GET)
+	public ModelAndView userToClose(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		try {
+			String userID = request.getParameter("userID");
+			UserInfo user = userInfoService.getUserInfoByID(Integer.valueOf(userID));
+			user.setState(0);
+			userInfoService.saveUserInfo(user);
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		return new ModelAndView(ConstantUtil.TOUSERINFO);
+	}
+	@RequestMapping(value="/userToOpen", method=RequestMethod.GET)
+	public ModelAndView userToOpen(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		try {
+			String userID = request.getParameter("userID");
+			UserInfo user = userInfoService.getUserInfoByID(Integer.valueOf(userID));
+			user.setState(1);
+			userInfoService.saveUserInfo(user);
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		return new ModelAndView(ConstantUtil.TOUSERINFO);
 	}
 	
 	/**
@@ -313,9 +385,71 @@ public class AdminController {
 	 */
 	@RequestMapping(value="/notes", method=RequestMethod.GET)
 	public ModelAndView note(final Model model, final HttpServletRequest request, HttpServletResponse response){
-	
+		//userNoteService
+		
+		try {
+			String pagenow = request.getParameter("pagenow");
+			String userID = request.getParameter("userID");
+			
+			Page<UserNote> userNotesPage = null;
+			if(!StringUtil.isEmpty(pagenow)){
+				userNotesPage = new Page<UserNote>(Integer.valueOf(pagenow).intValue(), 5);
+			}else{
+				userNotesPage = new Page<UserNote>(1,5);
+			}
+			userNotesPage = userNoteService.getUserNoteByPageAndCondition(userNotesPage, userID, null);
+			userNotesPage.setTotal(userNoteService.getUserNoteNumByCondition(userID, null));
+
+			//用于pagemodel跳转的url
+			model.addAttribute(ConstantUtil.PAGEMODEL_URL, ConstantUtil.NOTESURL);
+			if(!StringUtil.isEmpty(userID)){
+				//url参数
+				model.addAttribute(ConstantUtil.PAGEMODEL_PARAM, "userID="+userID);
+			}
+			model.addAttribute(ConstantUtil.PAGEMODELS, userNotesPage);
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.NOTES);
 		return new ModelAndView(ConstantUtil.ADMINMAIN);
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月26日
+	 * @remarks	禁止/恢复用户事件(改变用户事件状态0/1)
+	 */
+	@RequestMapping(value="/noteToClose", method=RequestMethod.GET)
+	public ModelAndView noteToClose(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		String userID = request.getParameter("userID");
+		try {
+			String noteID = request.getParameter("noteID");
+			userNoteService.saveUserNote(noteID, null, null, null, 0, null, 2);
+
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		return new ModelAndView(new StringBuffer(ConstantUtil.TONOTES).append("?userID=").append(userID).toString());
+	}
+	@RequestMapping(value="/noteToOpen", method=RequestMethod.GET)
+	public ModelAndView noteToOpen(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		String userID = request.getParameter("userID");
+		try {
+			String noteID = request.getParameter("noteID");
+			userNoteService.saveUserNote(noteID, null, null, null, 1, null, 2);
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		//return new ModelAndView(ConstantUtil.TONOTES);
+		return new ModelAndView(new StringBuffer(ConstantUtil.TONOTES).append("?userID=").append(userID).toString());
 	}
 	
 	/**
@@ -327,8 +461,74 @@ public class AdminController {
 	@RequestMapping(value="/noteTags", method=RequestMethod.GET)
 	public ModelAndView noteTag(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
+		//userNoteTagService
+		
+		try {
+			String pagenow = request.getParameter("pagenow");
+			String userID = request.getParameter("userID");
+			
+			Page<UserNotetag> userNoteTagsPage = null;
+			if(!StringUtil.isEmpty(pagenow)){
+				userNoteTagsPage = new Page<UserNotetag>(Integer.valueOf(pagenow).intValue(), 5);
+			}else{
+				userNoteTagsPage = new Page<UserNotetag>(1,5);
+			}
+			userNoteTagsPage = userNoteTagService.getUserNoteTagByPageAndCondition(userNoteTagsPage, userID, null);
+			userNoteTagsPage.setTotal(userNoteTagService.getUserNoteTagNumByCondition(userID, null));
+
+			//用于pagemodel跳转的url
+			model.addAttribute(ConstantUtil.PAGEMODEL_URL, ConstantUtil.NOTETAGSURL);
+			if(!StringUtil.isEmpty(userID)){
+				//url参数
+				model.addAttribute(ConstantUtil.PAGEMODEL_PARAM, "userID="+userID);
+			}
+			model.addAttribute(ConstantUtil.PAGEMODELS, userNoteTagsPage);
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.NOTETAGS);
 		return new ModelAndView(ConstantUtil.ADMINMAIN);
 	}
 
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月26日
+	 * @remarks	禁止/恢复用户标签(改变用户标签状态0/1)
+	 */
+	@RequestMapping(value="/noteTagToClose", method=RequestMethod.GET)
+	public ModelAndView noteTagToClose(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		String userID = request.getParameter("userID");
+		try {
+			String noteTagID = request.getParameter("noteTagID");
+			//userNoteTagService.saveUserNoteTag(noteTagID, null, null, null, 0, 2);
+			userNoteTagService.updateUserNoteTagState(noteTagID, 0);//级联
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		//return new ModelAndView(ConstantUtil.TONOTETAGS);
+		return new ModelAndView(new StringBuffer(ConstantUtil.TONOTETAGS).append("?userID=").append(userID).toString());
+	}
+	@RequestMapping(value="/noteTagToOpen", method=RequestMethod.GET)
+	public ModelAndView noteTagToOpen(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		String userID = request.getParameter("userID");
+		try {
+			String noteTagID = request.getParameter("noteTagID");
+			userNoteTagService.saveUserNoteTag(noteTagID, null, null, null, 1, 2);
+			//userNoteTagService.updateUserNoteTagState(noteTagID, 1);//级联
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		//return new ModelAndView(ConstantUtil.TONOTETAGS);
+		return new ModelAndView(new StringBuffer(ConstantUtil.TONOTETAGS).append("?userID=").append(userID).toString());
+	}
 }

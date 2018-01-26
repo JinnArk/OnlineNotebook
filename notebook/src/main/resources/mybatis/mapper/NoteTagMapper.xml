@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.notebook.dao.UserNoteTagMapper" >
+	<resultMap id="noteTag" type="com.notebook.entities.UserNotetag" >
+        <id column="NOTETAG_ID" property="notetagId" jdbcType="BIGINT" />
+        <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+        <result column="NOTETAG_NAME" property="notetagName" jdbcType="VARCHAR" />
+        <result column="NOTETAG_STATE" property="notetagState" jdbcType="BIGINT" />
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP" />
+        <result column="NOTETAG_REMARK" property="notetagRemark" jdbcType="VARCHAR" />
+    </resultMap>
+	
+	<!-- 根据pageModel和condition获取标签noteTag数据 -->
+	<select id="selectNoteTagByPageAndCondition" resultMap="noteTag" >
+		SELECT * FROM USER_NOTETAG
+		<where>
+		  ${ew.sqlSegment}
+		</where>
+		ORDER BY CREATE_DATE DESC
+	</select>
+
+</mapper>

@@ -39,8 +39,10 @@ public final class ConstantUtil {
 	//AdminController
 	public static final String ADMINMAIN = "/admin/main";
 	public static final String SYSTEMMAIL = "/admin/systemMail";
+		//userinfo
 	public static final String USERINFOS = "/admin/userInfos";
-	
+	public static final String USERINFOSURL = "/admin/userInfo";
+	public static final String TOUSERINFO = "redirect:/admin/userInfo";
 		//notice
 	public static final String NOTICESPAGE = "/admin/notices";
 	public static final String NOTICEPAGE = "/admin/notice";
@@ -51,7 +53,12 @@ public final class ConstantUtil {
 	
 		//note-notes
 	public static final String NOTES = "/admin/notes";
+	public static final String NOTESURL = "/admin/notes";
+	public static final String TONOTES = "redirect:/admin/notes";
+		//note-noteTag
 	public static final String NOTETAGS = "/admin/noteTags";
+	public static final String NOTETAGSURL = "/admin/noteTags";
+	public static final String TONOTETAGS = "redirect:/admin/noteTags";
 	
 		//index
 	public static final String ADMININDEXMODEL = "adminIndexModel";
