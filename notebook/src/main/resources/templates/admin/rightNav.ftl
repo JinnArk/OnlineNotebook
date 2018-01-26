@@ -58,6 +58,9 @@
 						
 						<ul class="nav nav-second-level collapse">
 							<li>
+								<a href="/commons/letterSended">已发送站内信</a>
+							</li>
+							<li>
 								<a href="/commons/letterUnread">未读站内信</a>
 							</li>
 							<li>

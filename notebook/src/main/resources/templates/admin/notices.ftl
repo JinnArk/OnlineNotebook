@@ -23,7 +23,7 @@
 										</div>
 										
 										<button type="submit" value="Submit" class="hvr-outline-in btn btn-info" >快速搜索</button>
-										<a href="javascript:;" name="noticeCreateButton" class="hvr-outline-in btn btn-success">新建公告</a>
+										<a href="/admin/notice" name="noticeCreateButton" class="hvr-outline-in btn btn-success">新建公告</a>
 									</form> 
 								</div>
 							</div>
@@ -39,12 +39,12 @@
 									</tr> 
 								</thead> 
 								<tbody> 
-									<#list notices.records as notice>
+									<#list pageModels.records as notice>
 									<tr> 
 										<td>${notice.noticeTitle}</td> <td>${notice.createDate}</td> 
 										<td>
-											<a href="javascript:;" class="label label-success">修改公告</a>
-											<a href="javascript:;" class="label label-danger">删除公告</a>
+											<a href="/admin/notice?noticeId=${notice.noticeID?c}" class="label label-success">修改公告</a>
+											<a href="/admin/noticeDelete?noticeId=${notice.noticeID?c}" class="label label-danger">删除公告</a>
 										</td> 
 									</tr>
 									</#list>
@@ -52,15 +52,8 @@
 							</table>
 						</div>
 						
-						<#if notices.total == 0>
-							<div class="but_list">
-							   <div class="alert alert-danger" role="alert">
-								<strong>这里是空的</strong> 什么都没有！
-							   </div>
-							</div>
-						<#else>
-							<#include "../commons/pageModel.ftl">
-						</#if>
+						
+						<#include "../commons/pageModel.ftl">
 
 					</div>
 				</div>

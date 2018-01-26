@@ -36,11 +36,11 @@
 										请写下你需要与用户交流的信息
 									</div>
 									<form class="com-mail">
-										<input type="text" class="form-control1 control3" placeholder="用户邮箱,如有多个请用 ; 隔开">
-										<input type="text" class="form-control1 control3" placeholder="信件标题">
-										<textarea rows="6" class="form-control1 control2" placeholder="信件内容"></textarea>
+										<input type="text" name="newLetterRecipientName" class="form-control1 control3" placeholder="用户邮箱,如有多个请用 ; 隔开">
+										<input type="text" name="newLetterTitle" class="form-control1 control3" placeholder="信件标题">
+										<textarea rows="6" name="newLetterContent" class="form-control1 control2" placeholder="信件内容"></textarea>
 										
-										<input type="submit" value="发送"> 
+										<button type="button" name="newLetterButton" class="btn btn-success">发送</button>
 									</form>
 								</div>
 							</div>

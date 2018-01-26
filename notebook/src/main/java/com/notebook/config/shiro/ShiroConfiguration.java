@@ -67,6 +67,7 @@ public class ShiroConfiguration {
        //filterChainDefinitionMap.put("/ui/index", "user");
        filterChainDefinitionMap.put("/ui/**", "user");
        filterChainDefinitionMap.put("/admin/**", "user");
+       filterChainDefinitionMap.put("/commons/**", "user");
        
        //<!-- 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
        //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
@@ -78,6 +79,7 @@ public class ShiroConfiguration {
        //所有 用户/管理员 方法都拦截
        filterChainDefinitionMap.put("/ui/**", "authc");
        filterChainDefinitionMap.put("/admin/**", "authc");
+       filterChainDefinitionMap.put("/commons/**", "authc");
        
        //不拦截登陆方法
        filterChainDefinitionMap.put("/sign", "anon");

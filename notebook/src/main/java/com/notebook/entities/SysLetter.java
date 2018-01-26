@@ -2,7 +2,10 @@ package com.notebook.entities;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+
 public class SysLetter {
+	@TableId
     private Integer letterId;
 
     private Integer senderId;

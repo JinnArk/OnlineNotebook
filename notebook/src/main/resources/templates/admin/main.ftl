@@ -15,6 +15,9 @@
 	window.scrollTo(0,1); 
 	} 
 </script>
+
+<!--自定义css-->
+<link href="../static/css/own/admin.css" rel='stylesheet' type='text/css' />
 <!-- Bootstrap Core CSS -->
 <link href="../static/css/bootstrap.css" rel='stylesheet' type='text/css' />
 <!-- Custom CSS -->

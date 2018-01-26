@@ -52,4 +52,22 @@ function handle(object, ident) {
 		} else {
 		}
 	}
+	
+	if (ident == "sendLetter") {
+		alert("sendLetter");
+		alert(object);
+		if (object == "success") {
+			location.reload();
+		} else {
+		}
+	}
+	
+	if (ident == "readLetters") {
+		alert("readLetters");
+		alert(object);
+		if (object == "success") {
+			location.reload();
+		} else {
+		}
+	}
 }

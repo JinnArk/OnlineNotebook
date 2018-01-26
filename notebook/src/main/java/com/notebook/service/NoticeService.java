@@ -3,6 +3,7 @@ package com.notebook.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.notebook.entities.SysNotice;
 import com.notebook.model.common.NoticeModel;
 
 /**
@@ -24,7 +25,7 @@ public interface NoticeService {
 	 * 
 	 * @author 2ing
 	 * @createTime 2018年1月24日
-	 * @remarks 根据条件获取分页公告,condition为条件
+	 * @remarks 获取分页公告，根据条件，condition为条件
 	 */
 	Page<NoticeModel> getNoticeModelsByPageAndCondition(Page<NoticeModel> page, String conditon) throws Exception;
 	
@@ -32,9 +33,9 @@ public interface NoticeService {
 	 * 
 	 * @author 2ing
 	 * @createTime 2018年1月24日
-	 * @remarks	根据ID删除公告
+	 * @remarks	删除公告，根据ID
 	 */
-	int deleteNoticeById(String id) throws Exception;
+	int deleteNoticeById(int id) throws Exception;
 	
 	/**
 	 * 
@@ -43,4 +44,20 @@ public interface NoticeService {
 	 * @remarks 获取公告总数，根据条件
 	 */
 	int getAllNoticeNumByCondition(String condition) throws Exception;
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月25日
+	 * @remarks 获取公告实体，根据ID
+	 */
+	SysNotice getNoticeById(int id) throws Exception;
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月25日
+	 * @remarks	保存公告实体
+	 */
+	int saveNotice(SysNotice notice) throws Exception;
 }

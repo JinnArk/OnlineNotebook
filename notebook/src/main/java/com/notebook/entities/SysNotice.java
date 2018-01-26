@@ -3,6 +3,7 @@ package com.notebook.entities;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.notebook.util.DateUtil;
 
 public class SysNotice {
 	
@@ -41,16 +42,16 @@ public class SysNotice {
         this.noticeContent = noticeContent == null ? null : noticeContent.trim();
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getCreateDate() {
+        return DateUtil.dateToString(createDate);
     }
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Date getModifyDate() {
-        return modifyDate;
+    public String getModifyDate() {
+        return DateUtil.dateToString(modifyDate);
     }
 
     public void setModifyDate(Date modifyDate) {

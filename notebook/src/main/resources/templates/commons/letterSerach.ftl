@@ -26,19 +26,19 @@
 				</div>
 				<div class="col-md-8">
 					<div class="panel panel-widget forms-panel">
-						<div class="forms">
+						<div class="forms">	
 							<div class="form-two widget-shadow">
 								<div class="form-title">
 									<h4>信件查询</h4>
 								</div>
 								<div class="form-body" data-example-id="simple-form-inline">
-									<form class="form-inline"> 
+									<form class="form-inline" action="/commons/letterSerach" method="get"> 
 										<div class="form-group"> 
-											<label for="exampleInputName2">接收时间：</label> 
-											<input type="text" class="form-control" id="exampleInputName2" placeholder="Your name">
+											<label for="createDate">接收时间：</label> 
+											<input type="text" class="form-control" id="createDate" name="createDate" placeholder="2018-1-25">
 										</div>
 										
-										<a href="javascript:;" class="hvr-outline-in btn btn-info">快速搜索</a>
+										<button type="sumbit" class="hvr-outline-in btn btn-info">快速搜索</button>
 									</form> 
 								</div>
 							</div>
@@ -49,43 +49,46 @@
 					
 						<div class="inbox-page">
 							<h4>查询结果</h4>
+							
+							<#if pageModels??>
+							<#list pageModels.records as letter>
 							<div class="inbox-row widget-shadow">
-								
 								<div class="mail">
-									<h6>用户：2ing</h6>
+									<h6>用户：${letter.username}</h6>
 								</div>
 								
-								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour" class="collapsed">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" 
+									href="#${letter.letterID?c}" aria-expanded="false" aria-controls="${letter.letterID?c}" class="collapsed">
 									<div class="mail">
-										<p>标题：关于东西被删了希望找回</p>
+										<p>标题：${letter.letterTitle}</p>
 									</div>
 								</a>
 								
-								<div class="mail-right"><p>2018-01-19 17:08:22</p></div>
+								<div class="mail-right"><p>${letter.createDate}</p></div>
 								<div class="clearfix"> </div>
-								<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour" aria-expanded="false" style="height: 0px;">
+								<div id="${letter.letterID?c}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour" aria-expanded="false" style="height: 0px;">
 									<div class="mail-body">
-										<p> Brunch 3 wolf moon tempor, sunt aliqua put a b
-										ird on it squid single-origin coffee nulla assumen
-										da shoreditch et. Nihil anim keffiyeh helvetica,
-										craft beer labore wes anderson cred nesciunt sapie
-										nte ea proident.</p>
+										<p> ${letter.letterContent}</p>
+										
+										<#if letter.letterState == 2>
 										<form>
-											<input type="text" placeholder="需要回复的话" required="">
-											<input type="submit" value="发送">
+											<input type="text" name="reLetterRecipientName" value="${letter.username}" hidden>
+											<input type="text" name="reLetterTitle" value="回复:${letter.username},对于:${letter.letterTitle}" hidden>
+											<input type="text" name="replyLetterID" value="${letter.letterID?c}" hidden>
+											<input type="text" name="reLetterContent" placeholder="需要回复的话" required="">
+											
+											<input name="reLetterButton" class="replyLetter" type="button" value="发送">
 										</form>
+										</#if>
 									</div>
 								</div>
 							</div>
-							
+							</#list>
+							</#if>
 						</div>
 						
-						<div class="but_list">
-						   <div class="alert alert-danger" role="alert">
-							<strong>是空的</strong> 请检查你所输入的搜索信息
-						   </div>
-						 </div>
-						 
+						<#include "../commons/pageModel.ftl">
+						
 					</div>
 					
 				</div>

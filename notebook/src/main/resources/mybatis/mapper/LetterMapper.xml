@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.notebook.dao.LetterMapper" >
+	<!-- 站内信model -->
+    <resultMap id="letterModel" type="com.notebook.model.common.LetterModel" >
+        <result column="LETTER_ID" property="letterID" jdbcType="BIGINT" />
+        <result column="SENDER_ID" property="senderID" jdbcType="BIGINT" />
+        <result column="RECIPIENT_ID" property="recipientID" jdbcType="BIGINT" />
+        <result column="REPLY_LETTER_ID" property="replyLetterID" jdbcType="BIGINT" />
+        <result column="LETTER_TITLE" property="letterTitle" jdbcType="VARCHAR" />
+        <result column="LETTER_CONTENT" property="letterContent" jdbcType="VARCHAR" />
+        <result column="LETTER_STATE" property="letterState" jdbcType="BIGINT" />
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+        <result column="USER_ID" property="userID" jdbcType="BIGINT" />
+    </resultMap>
+	
+	
+	<!-- 根据pageModel和condition获取站内信letter数据 -->
+	<select id="selectLetterByPageAndCondition" resultMap="letterModel">
+		SELECT l.*,u.USERNAME,u.USER_ID FROM SYS_LETTER l
+		JOIN USER_INFO u
+		<where>
+		  ${ew.sqlSegment}
+		</where>
+		ORDER BY l.CREATE_DATE DESC
+	</select>
+	
+	<!-- 批量修改站内信状态 -->
+	<update id="updateLettersStateTOnoReply" parameterType="java.lang.String" >
+		UPDATE SYS_LETTER SET LETTER_STATE=2 
+		WHERE LETTER_ID IN        
+		<foreach collection="letterIDs"	open="(" close=")" separator="," item="letterID" index="index">  
+            #{letterID}  
+        </foreach>  
+	</update>
+
+</mapper>

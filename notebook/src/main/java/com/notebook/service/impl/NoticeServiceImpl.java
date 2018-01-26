@@ -38,7 +38,7 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	@Override
-	public int deleteNoticeById(String id) throws Exception{
+	public int deleteNoticeById(int id) throws Exception{
 		return noticeMapper.deleteById(id);
 	}
 
@@ -49,6 +49,20 @@ public class NoticeServiceImpl implements NoticeService{
 			entityWrapper.like("NOTICE_TITLE",condition);
 		}
 		return noticeMapper.selectCount(entityWrapper);
+	}
+
+	@Override
+	public SysNotice getNoticeById(int id) throws Exception {
+		return noticeMapper.selectById(id);
+	}
+
+	@Override
+	public int saveNotice(SysNotice notice) throws Exception {
+		if(!notice.getModifyDate().equals(notice.getCreateDate())){
+			return noticeMapper.updateById(notice);
+		}else{
+			return noticeMapper.insert(notice);
+		}
 	}
 
 }

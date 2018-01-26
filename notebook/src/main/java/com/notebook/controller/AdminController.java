@@ -1,6 +1,7 @@
 package com.notebook.controller;
 
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.notebook.config.email.EmailConfig;
+import com.notebook.entities.SysNotice;
 import com.notebook.entities.UserInfo;
 import com.notebook.model.admin.AdminIndexModel;
 import com.notebook.model.common.LoginRecordModel;
@@ -24,6 +26,7 @@ import com.notebook.model.common.NoticeModel;
 import com.notebook.service.NoticeService;
 import com.notebook.service.UserInfoService;
 import com.notebook.service.UserLoginRecordService;
+import com.notebook.util.CommonUtil;
 import com.notebook.util.ConstantUtil;
 import com.notebook.util.EmailUtil;
 import com.notebook.util.PasswordUtil;
@@ -175,7 +178,7 @@ public class AdminController {
 	 * 
 	 * @author 2ing
 	 * @createTime 2018年1月22日
-	 * @remarks 公告管理
+	 * @remarks 公告notice管理
 	 */
 	@RequestMapping(value="/notices", method=RequestMethod.GET)
 	public ModelAndView notices(final Model model, final HttpServletRequest request, HttpServletResponse response){
@@ -191,11 +194,11 @@ public class AdminController {
 		}
 		
 		try {
-			noticesPage = noticeService.getNoticeModelsByPageAndCondition(noticesPage, noticeTitle);
-			noticesPage.setTotal(noticeService.getAllNoticeNumByCondition(noticeTitle));
+			noticesPage = noticeService.getNoticeModelsByPageAndCondition(noticesPage, noticeTitle);//分页之后的信息
+			noticesPage.setTotal(noticeService.getAllNoticeNumByCondition(noticeTitle));//总数
 			
 			//pagemodel
-			model.addAttribute(ConstantUtil.NOTICES, noticesPage);
+			model.addAttribute(ConstantUtil.PAGEMODELS, noticesPage);
 			//用于pagemodel跳转的url
 			model.addAttribute(ConstantUtil.PAGEMODEL_URL, ConstantUtil.NOTICESURL);
 			//url参数
@@ -214,21 +217,79 @@ public class AdminController {
 	 * 
 	 * @author 2ing
 	 * @createTime 2018年1月22日
-	 * @remarks 公告删除
+	 * @remarks 公告notice删除
 	 */
 	@RequestMapping(value="/noticeDelete", method=RequestMethod.GET)
 	public ModelAndView noticeDelete(final Model model, final HttpServletRequest request, HttpServletResponse response){
 		
 		String noticeId = request.getParameter("noticeId");
 		try {
-			noticeService.deleteNoticeById(noticeId);
+			noticeService.deleteNoticeById(Integer.valueOf(noticeId).intValue());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.NOTICESPAGE);
+		return new ModelAndView(ConstantUtil.TONOTICESPAGE);
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月25日
+	 * @remarks 编辑notice公告
+	 */
+	@RequestMapping(value="/notice", method=RequestMethod.GET)
+	public ModelAndView notice(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		try {
+			String noticeId = request.getParameter("noticeId");
+			if(!StringUtil.isEmpty(noticeId)){
+				SysNotice notice = noticeService.getNoticeById(Integer.valueOf(noticeId).intValue());
+				model.addAttribute(ConstantUtil.NOTICE, notice);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.NOTICEPAGE);
 		return new ModelAndView(ConstantUtil.ADMINMAIN);
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月25日
+	 * @remarks 公告notice保存
+	 */
+	@RequestMapping(value="/savenotice", method=RequestMethod.POST)
+	public ModelAndView savenotice(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		try {
+			String noticeId = request.getParameter("noticeID");
+			String noticeTitle = request.getParameter("noticeTitle");
+			String noticeContent = request.getParameter("noticeContent");
+			
+			SysNotice notice = null;
+			
+			if(!StringUtil.isEmpty(noticeId)){//update
+				notice = noticeService.getNoticeById(Integer.valueOf(noticeId).intValue());
+				notice.setNoticeTitle(noticeTitle);
+				notice.setNoticeContent(noticeContent);
+				notice.setModifyDate(new Date());
+			}else{//new
+				notice = new SysNotice();
+				notice.setNoticeId(CommonUtil.getNum());
+				notice.setNoticeTitle(noticeTitle);
+				notice.setNoticeContent(noticeContent);
+				Date currentDate = new Date();
+				notice.setCreateDate(currentDate);
+				notice.setModifyDate(currentDate);
+			}
+			noticeService.saveNotice(notice);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ModelAndView(ConstantUtil.TONOTICESPAGE);
 	}
 	
 	/**

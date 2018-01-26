@@ -16,11 +16,12 @@ public final class ConstantUtil {
 	public static final String FOOT = "foot";
 	public static final String INDEX = "index";
 	public static final String PASSWORD = "password";
-	
+	public static final String PAGEMODELS = "pageModels";
+		//AJAX
 	public static final String AJAX_SUCCESS = "success";
 	public static final String AJAX_FAIL = "fail";
 	public static final String AJAX_ERROR = "error";
-	
+		//PageModel
 	public static final String PAGEMODEL_URL = "pageModelUrl";
 	public static final String PAGEMODEL_PARAM = "pageModelParam";
 	
@@ -40,12 +41,16 @@ public final class ConstantUtil {
 	public static final String SYSTEMMAIL = "/admin/systemMail";
 	public static final String USERINFOS = "/admin/userInfos";
 	
+		//notice
 	public static final String NOTICESPAGE = "/admin/notices";
+	public static final String NOTICEPAGE = "/admin/notice";
 	public static final String NOTICES = "notices";
+	public static final String NOTICE = "notice";
 	public static final String NOTICESURL = "/admin/notices";
+	public static final String TONOTICESPAGE = "redirect:/admin/notices";
 	
+		//note-notes
 	public static final String NOTES = "/admin/notes";
-	
 	public static final String NOTETAGS = "/admin/noteTags";
 	
 		//index
@@ -59,11 +64,22 @@ public final class ConstantUtil {
 	public static final String TOSYSTEMMAIL = "redirect:/admin/systemMail";
 	
 	//LetterController
+		//unread
 	public static final String LETTER_UNREAD = "/commons/letterUnread";
-	
+	public static final String UNREADLETTERS = "unreadLetters";
+	public static final String UNREADLETTERSURL = "/commons/letterUnread";
+	public static final String TOUNREADLETTERSPAGE = "redirect:/commons/letterUnread";
+
+		//sended
+	public static final String LETTER_SENDED = "/commons/letterSended";
+	public static final String SENDEDLETTERSURL = "/commons/letterSended";
+		//send
 	public static final String LETTER_NEW = "/commons/letterNew";
 	
+		//seache
 	public static final String LETTER_SERACH = "/commons/letterSerach";
+	public static final String SERACHLETTERSURL = "/commons/letterSerach";
+	
 	
 	//UserController
 	

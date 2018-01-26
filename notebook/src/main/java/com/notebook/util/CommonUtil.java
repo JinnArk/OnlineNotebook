@@ -61,4 +61,13 @@ public class CommonUtil {
 		return requestType + " : " + ip;
 	}
 	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月25日
+	 * @remarks 随机获取一个1-999999991的整形数字
+	 */
+	public final static int getNum(){
+		return 1+(int)(Math.random()*999999990);
+	}
 }
