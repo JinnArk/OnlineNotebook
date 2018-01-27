@@ -1,0 +1,22 @@
+.newEmailButton{		
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #fff;
+    background: #fd5c63;
+    width: 100%;
+    padding: .5em 1em;
+    font-size: 1em;
+    margin: 1.5em 0 0;
+}
+.findPasswordButton{
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #fff;
+    background: #fd5c63;
+    width: 100%;
+    padding: .5em 1em;
+    font-size: 1em;
+    margin: 1.5em 0 0;
+}

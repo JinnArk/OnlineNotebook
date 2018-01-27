@@ -59,4 +59,13 @@ public interface UserInfoMapper extends SuperMapper<UserInfo>{
 	 * @remarks 获取-管理员首页model数据
 	 */
 	AdminIndexModel selectAdminIndexModel() throws Exception;
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月27日
+	 * @remarks	角色中间表插入
+	 */
+	int createConnectWithUserAndRole(@Param("mdID") int mdID, @Param("userID") int userID
+			, @Param("roleID") int roleID) throws Exception;
 }

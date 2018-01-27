@@ -74,9 +74,15 @@ public interface UserInfoService {
 	  * 
 	  * @author 2ing
 	  * @createTime 2018年1月23日
-	  * @remarks 保存用户信息
+	  * @remarks 保存用户信息,saveType 0新建 1修改 2改变状态 3修改密码
+	  */
+	 int saveUserInfo(String userID, String username, String password, String nickname, String salt, int state, int saveType) throws Exception;
+	 
+	 /**
+	  * 
+	  * @author 2ing
+	  * @createTime 2018年1月27日
+	  * @remarks 快捷保存直接使用实体保存
 	  */
 	 int saveUserInfo(UserInfo user) throws Exception;
-	 
-
 }

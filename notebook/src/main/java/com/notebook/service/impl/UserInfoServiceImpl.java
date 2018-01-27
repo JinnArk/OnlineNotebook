@@ -1,5 +1,6 @@
 package com.notebook.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.notebook.dao.UserInfoMapper;
 import com.notebook.entities.UserInfo;
 import com.notebook.model.admin.AdminIndexModel;
 import com.notebook.service.UserInfoService;
+import com.notebook.util.CommonUtil;
 import com.notebook.util.StringUtil;
 
 
@@ -19,7 +21,6 @@ public class UserInfoServiceImpl implements UserInfoService{
 
 	@Autowired
 	private UserInfoMapper userInfoMapper;
-
 	
 	@Override
 	public UserInfo getUserInfoByID(int userID) throws Exception {
@@ -66,8 +67,46 @@ public class UserInfoServiceImpl implements UserInfoService{
 	}
 
 	@Override
+	public int saveUserInfo(String userID, String username, String password, String nickname,
+			String salt, int state, int saveType) throws Exception {
+		UserInfo user = null;
+		if(saveType==0){
+			user = new UserInfo();
+			int id = CommonUtil.getNum();
+			user.setUserId(id);
+			user.setUuid(id);
+			user.setUsername(username);
+			user.setPassword(password);
+			user.setSalt(salt);
+			Date now = new Date();
+			user.setCreateDate(now);
+			user.setLoginDate(now);
+			user.setNickname(nickname);
+			//普通用户默认角色ID:1024 
+			userInfoMapper.insert(user);
+			return userInfoMapper.createConnectWithUserAndRole(CommonUtil.getNum(), id, 1024);
+		}else if(saveType==1){
+			user = userInfoMapper.selectById(userID);
+			user.setNickname(nickname);
+			return userInfoMapper.updateById(user);
+		}else if(saveType==2){
+			user = userInfoMapper.selectById(userID);
+			user.setState(state);
+			return userInfoMapper.updateById(user);
+		}else if(saveType==3){
+			user = userInfoMapper.selectById(userID);
+			user.setSalt(salt);
+			user.setPassword(password);
+			return userInfoMapper.updateById(user);
+		}else{
+			return 9527;//出现了其他数字
+		}
+	}
+
+	@Override
 	public int saveUserInfo(UserInfo user) throws Exception {
-		
 		return userInfoMapper.updateById(user);
 	}
+
+
 }

@@ -94,4 +94,12 @@
 		WHERE U.USERNAME=#{username}
     </select>
 	
+	<!-- user_role_md中间表插入 -->
+	<insert id="createConnectWithUserAndRole" >  
+		INSERT INTO MD_USER_ROLE 
+		(MD_ID,USER_ID,ROLE_ID)
+		VALUES
+		(#{mdID},#{userID},#{roleID})
+	</insert> 
+	
 </mapper>

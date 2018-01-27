@@ -100,13 +100,21 @@
           	<artifactId>spring-context-support</artifactId>
        	</dependency>
 		
-		<!-- springboot 邮箱模块 -->
+		<!-- springboot 邮箱模块 (上方模块已包含)
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
+		-->
 
 		<!-- logback -->
+		
+		<!-- redis-jedis -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-redis</artifactId>
+		    <version>1.4.7.RELEASE</version>
+		</dependency>
 	    
 	</dependencies>
 

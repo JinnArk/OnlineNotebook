@@ -90,5 +90,7 @@ public final class ConstantUtil {
 	
 	//UserController
 	
-	
+	//EmailController
+	public static final String EMAILTYPEREGISTER = "Register";
+	public static final String EMAILTYPEFINDPASSWORD = "FindPassword";
 }

@@ -83,7 +83,7 @@ public class UserNoteServiceImpl implements UserNoteService{
 			usernote.setNoteState(state);
 			return userNoteMapper.updateById(usernote);
 		}else{
-			return 3;//出现了其他数字
+			return 9527;//出现了其他数字
 		}
 	}
 

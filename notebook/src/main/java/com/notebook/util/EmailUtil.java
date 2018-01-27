@@ -23,7 +23,7 @@ import com.sun.mail.util.MailSSLSocketFactory;
  */
 public final class EmailUtil{
 	
-	private EmailUtil() {}
+	private EmailUtil() throws Exception {super(); }
 	
 	//邮箱属性
 	static private Properties prop = new Properties();
@@ -126,6 +126,9 @@ public final class EmailUtil{
      * @remarks 发送邮件
      */
     public static void sentEmail(String tomail, String mailTitle, String mailContent) throws Exception{
+    	if(session==null){//尚未初始化
+    		emailUtilInit();
+    	}
     	
 		MimeMessage mimeMessage = new MimeMessage(session);   
 		mimeMessage.setFrom(new InternetAddress(EmailConfig.getUsername()));

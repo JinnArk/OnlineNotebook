@@ -1,5 +1,7 @@
 package com.notebook.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,13 +13,25 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+
+import com.notebook.entities.UserInfo;
+import com.notebook.service.UserInfoService;
+import com.notebook.util.CommonUtil;
 import com.notebook.util.ConstantUtil;
+import com.notebook.util.DateUtil;
+import com.notebook.util.EmailUtil;
+import com.notebook.util.PasswordUtil;
+import com.notebook.util.StringUtil;
 
 /**
  * 
@@ -28,6 +42,10 @@ import com.notebook.util.ConstantUtil;
 
 @Controller
 public class HomeController {
+	@Autowired
+	JedisPool jedisPool;
+	@Autowired
+	UserInfoService userInfoService;
 	
 	/**
 	 * 
@@ -70,6 +88,94 @@ public class HomeController {
 	/**
 	 * 
 	 * @author 2ing
+	 * @createTime 2018-01-27
+	 * @remarks 注册新用户
+	 */
+	@RequestMapping(value={"/registerUser"},method=RequestMethod.POST)
+	@ResponseBody
+	public String registerUser(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		Jedis jedis = null;
+		String key = null;
+		
+		int backState=0;
+		int midState=0;
+		try{
+			jedis = jedisPool.getResource();
+			//4.进行验证
+			String ip = CommonUtil.getIpAddress(request);
+			String email = request.getParameter("email");
+			key = ConstantUtil.EMAILTYPEREGISTER+ip+email;
+			String value = jedis.get(key);
+			
+			//5.首先判断，验证码存不存在(是否发送过验证邮件)
+			if(!StringUtil.isEmpty(value)){
+				
+				String verificationCode = request.getParameter("newemailVer");
+				//5.1然后判断，验证吗是否正确
+				if(verificationCode.equals(value)){
+					//验证成功
+					//新建UserInfo,自动初始化密码 
+					String password = PasswordUtil.createSalt();
+					String salt = PasswordUtil.createSalt();
+					String encryptPassword = PasswordUtil.encryptPassword(password, salt);
+					
+					//调用注册
+					userInfoService.saveUserInfo(null, email, encryptPassword, "user", salt, 1, 0);
+					midState=1;
+					
+					//同时再发送邮件提示密码
+					StringBuffer title = new StringBuffer("用户：");
+					title.append(email).append("关于NOTEBOOK的初始密码");
+					StringBuffer content = new StringBuffer("您的初始密码为：");
+					content.append(password).append("，请妥善保管");
+					EmailUtil.sentEmail(email, title.toString(), content.toString());
+					
+					jedis.del(key);//删除redis中的数据
+					backState=3;
+					//return "注册成功";
+				}else{
+					//验证失败
+					//AJAX提示用户输入错误
+					backState=1;
+					//return "验证码错误";
+				}
+			}else{
+				//尚未-发送/创建-验证码
+				backState=0;
+				//return "该邮箱尚未申请验证";
+			}
+		}catch (Exception e){
+			if(jedis!=null){
+				jedis.del(key);//出现异常需要回删已存数据
+			}
+			e.printStackTrace();
+		}finally{
+			if(jedis!=null){
+				jedis.close();
+			}	
+		}
+		
+		if(backState==0){
+			return "该邮箱尚未申请验证 ";
+		}else if(backState==1){
+			return "验证码错误";
+		}else if(backState==3){
+			return "注册成功，同时发送提示邮件成功";
+		}else if(backState==4){
+			if(midState!=0){
+				return "注册成功，但是发送提示邮件失败，同时出现异常";
+			}else{
+				return "出现异常";
+			}
+		}else{
+			return "出现未知错误";
+		}
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
 	 * @createTime 2018年1月12日
 	 * @remarks 进入登陆页面(未登录)
 	 */
@@ -91,6 +197,100 @@ public class HomeController {
 
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.PASSWORD);
 		return new ModelAndView(ConstantUtil.MAIN);
+	}
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018-01-27
+	 * @remarks 通过邮箱验证修改密码
+	 */
+	@RequestMapping(value={"/repassword"},method=RequestMethod.POST)
+	@ResponseBody
+	public String repassword(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
+		Jedis jedis = null;
+		String key = null;
+		//0.该邮箱尚未申请验证修改密码 1.验证码错误 
+		//3.用户修改密码成功，同时发送提示邮件成功
+		//4.出现异常
+		int backState=0;
+		int midState=0;//1.用户修改密码成功 0.用户修改密码失败
+		
+		try{
+			jedis = jedisPool.getResource();
+			String ip = CommonUtil.getIpAddress(request);
+			String email = request.getParameter("email");
+			key = ConstantUtil.EMAILTYPEFINDPASSWORD+ip+email;
+			String value = jedis.get(key);
+			
+			if(!StringUtil.isEmpty(value)){
+				
+				String verificationCode = request.getParameter("findpasswordVer");
+				if(verificationCode.equals(value)){
+					//验证成功
+					//使用新的密码
+					String password = request.getParameter("newpassword");
+					String salt = PasswordUtil.createSalt();
+					String encryptPassword = PasswordUtil.encryptPassword(password, salt);
+					
+					//根据username获取用户
+					UserInfo user = userInfoService.getUserInfoByUsername(email);
+					user.setSalt(salt);
+					user.setPassword(encryptPassword);
+					//调用修改密码
+					userInfoService.saveUserInfo(user);
+					
+					midState=1;
+					
+					//同时再发送邮件提示用户修改了密码
+					StringBuffer title = new StringBuffer("用户：");
+					title.append(email).append("关于NOTEBOOK的修改密码");
+					StringBuffer content = new StringBuffer("您与：\n");
+					content.append(DateUtil.dateToString(new Date())).append("\n修改了密码");
+					EmailUtil.sentEmail(email, title.toString(), content.toString());
+					
+					jedis.del(key);//删除redis中的数据
+					backState=3;
+					//return "修改成功";
+				}else{
+					//验证失败
+					//AJAX提示用户输入错误
+					backState=1;
+					//return "验证码错误";
+				}
+			}else{
+				//尚未-发送/创建-验证码
+				backState=0;
+				//return "该邮箱尚未申请验证修改密码";
+			}
+		}catch (Exception e){
+			backState=4;
+			if(jedis!=null){
+				jedis.del(key);//出现异常需要回删已存数据
+			}
+			e.printStackTrace();
+		}finally{
+			if(jedis!=null){
+				jedis.close();
+			}	
+		}
+		
+		if(backState==0){
+			return "该邮箱尚未申请验证修改密码 ";
+		}else if(backState==1){
+			return "验证码错误";
+		}else if(backState==3){
+			return "用户修改密码成功，同时发送提示邮件成功";
+		}else if(backState==4){
+			if(midState!=0){
+				return "用户修改密码成功，但是发送提示邮件失败，同时出现异常";
+			}else{
+				return "出现异常";
+			}
+		}else{
+			return "出现未知错误";
+		}
 	}
 	
 	/**

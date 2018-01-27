@@ -21,10 +21,13 @@
 <!-- js -->
 <script src="static/js/jquery-1.11.1.min.js"></script>
 <!-- //js -->
+
+<link href='static/css/own/visitor.css' rel='stylesheet' type='text/css' />
 </head> 
 <body class="login-bg">
 		<#include "${content}.ftl">
 </body>
 		
+<script src="static/js/own/visitorAjaxUtil.js"></script>
 <script src="static/js/own/visitor.js"></script>		
 </html>
