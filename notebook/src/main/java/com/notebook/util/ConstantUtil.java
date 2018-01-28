@@ -15,7 +15,7 @@ public final class ConstantUtil {
 	public static final String CONTENT = "content";
 	public static final String FOOT = "foot";
 	public static final String INDEX = "index";
-	public static final String PASSWORD = "password";
+	public static final String PASSWORD = "/commons/password";
 	public static final String PAGEMODELS = "pageModels";
 		//AJAX
 	public static final String AJAX_SUCCESS = "success";
@@ -89,6 +89,16 @@ public final class ConstantUtil {
 	
 	
 	//UserController
+	public static final String USERTAGS = "noteTags";
+	public static final String UIMAIN = "/ui/main";
+	public static final String UINOTES = "/ui/notes";
+	public static final String UINOTESURL = "/ui/notes";
+	public static final String UINOTEPAGE = "/ui/newNote";
+	public static final String TOUINOTES = "redirect:/ui/notes";
+	public static final String UINOTETAGS = "/ui/noteTags";
+	public static final String UINOTETAGSURL = "/ui/noteTags";
+	public static final String UINOTETAGPAGE = "/ui/newNoteTag";
+	public static final String TOUINOTETAGS = "redirect:/ui/noteTags";
 	
 	//EmailController
 	public static final String EMAILTYPEREGISTER = "Register";

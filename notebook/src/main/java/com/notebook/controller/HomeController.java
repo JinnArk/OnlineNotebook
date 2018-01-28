@@ -26,6 +26,7 @@ import redis.clients.jedis.JedisPool;
 
 import com.notebook.entities.UserInfo;
 import com.notebook.service.UserInfoService;
+import com.notebook.service.UserLoginRecordService;
 import com.notebook.util.CommonUtil;
 import com.notebook.util.ConstantUtil;
 import com.notebook.util.DateUtil;
@@ -46,6 +47,8 @@ public class HomeController {
 	JedisPool jedisPool;
 	@Autowired
 	UserInfoService userInfoService;
+	@Autowired
+	UserLoginRecordService userLoginRecordService;
 	
 	/**
 	 * 
@@ -356,8 +359,19 @@ public class HomeController {
 			System.out.println("===============>用户名或密码错误");
 		}
 		
+		
+		
 		//是否验证成功
 		if(currentUser.isAuthenticated()){
+			
+			//记录登录
+			try {
+				UserInfo user = (UserInfo)currentUser.getPrincipal();
+				userLoginRecordService.saveLoginRecord(String.valueOf(user.getUserId()), CommonUtil.getIpAddress(request), "remark");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			//request.getSession().setAttribute(username, request.getRequestedSessionId());
             
             //进入-管理员/用户-页面

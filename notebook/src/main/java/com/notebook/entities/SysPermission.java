@@ -2,10 +2,12 @@ package com.notebook.entities;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+
 public class SysPermission implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
+	@TableId
     private int permissionId;
 
     private String permissionName;

@@ -72,5 +72,3 @@
 		</div>
 	</div>
 </div>
-
-<script type="text/javascript" src="http://validform.rjboy.cn/Validform/v5.1/Validform_v5.1_min.js"></script>

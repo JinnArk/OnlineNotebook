@@ -48,15 +48,15 @@ public class UserNoteTagServiceImpl implements UserNoteTagService{
 
 	@Override
 	public Page<UserNotetag> getUserNoteTagByPageAndCondition(Page<UserNotetag> page,
-			String userID, String createDate) throws Exception {
-		EntityWrapper<UserNotetag> entityWrapper = wrapperCreate(userID, createDate);
+			String userID, String createDate, String state) throws Exception {
+		EntityWrapper<UserNotetag> entityWrapper = wrapperCreate(userID, createDate, state);
 		return page.setRecords(userNoteTagMapper.selectNoteTagByPageAndCondition(page, entityWrapper));
 	}
 
 	@Override
-	public int getUserNoteTagNumByCondition(String userID, String createDate)
+	public int getUserNoteTagNumByCondition(String userID, String createDate, String state)
 			throws Exception {
-		EntityWrapper<UserNotetag> entityWrapper = wrapperCreate(userID, createDate);
+		EntityWrapper<UserNotetag> entityWrapper = wrapperCreate(userID, createDate, state);
 		return userNoteTagMapper.selectCount(entityWrapper);
 	}
 
@@ -66,7 +66,7 @@ public class UserNoteTagServiceImpl implements UserNoteTagService{
 	 * @createTime 2018年1月26日
 	 * @remarks 自定义wrapper构造方法
 	 */
-	private static EntityWrapper<UserNotetag> wrapperCreate(String userID, String createDate) throws Exception{
+	private static EntityWrapper<UserNotetag> wrapperCreate(String userID, String createDate, String state) throws Exception{
 		EntityWrapper<UserNotetag> entityWrapper = new EntityWrapper<UserNotetag>();
 		StringBuffer dateSql = null;
 		if(!StringUtil.isEmpty(createDate)){
@@ -77,6 +77,9 @@ public class UserNoteTagServiceImpl implements UserNoteTagService{
 			entityWrapper.where("USER_ID="+userID);
 			if(dateSql!=null){
 				entityWrapper.and(dateSql.toString());
+			}
+			if(!StringUtil.isEmpty(state)){
+				entityWrapper.and("NOTETAG_STATE="+state);
 			}
 		}else{
 			if(dateSql!=null){
@@ -95,7 +98,7 @@ public class UserNoteTagServiceImpl implements UserNoteTagService{
 			noteTag = new UserNotetag();
 			noteTag.setNotetagId(CommonUtil.getNum());
 			noteTag.setNotetagName(noteTagName);
-			//noteTag.setNotetagRemark(remark);
+			noteTag.setNotetagRemark(remark);
 			noteTag.setNotetagState(1);
 			noteTag.setUserId(Integer.valueOf(userID));
 			Date now = new Date();
@@ -105,7 +108,7 @@ public class UserNoteTagServiceImpl implements UserNoteTagService{
 		}else if(saveType==1){
 			noteTag = userNoteTagMapper.selectById(noteTagID);
 			noteTag.setNotetagName(noteTagName);
-			//noteTag.setNotetagRemark(remark);
+			noteTag.setNotetagRemark(remark);
 			Date now = new Date();
 			noteTag.setModifyDate(now);
 			return userNoteTagMapper.updateById(noteTag);	
@@ -116,5 +119,17 @@ public class UserNoteTagServiceImpl implements UserNoteTagService{
 		}else{
 			return 3;//出现了其他数字
 		}
+	}
+
+
+	@Override
+	public List<UserNotetag> getNoteTagByCondition(String userID, String state) throws Exception {
+		EntityWrapper<UserNotetag> entityWrapper = wrapperCreate(userID, null ,state);
+		return userNoteTagMapper.selectList(entityWrapper);
+	}
+
+	@Override
+	public UserNotetag getNoteTagsByID(String noteTagID) throws Exception {
+		return userNoteTagMapper.selectById(noteTagID);
 	}
 }

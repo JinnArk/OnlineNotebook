@@ -2,66 +2,6 @@
 <div id="page-wrapper">
 	<div class="main-page">
 		
-		<div class="row four-grids">
-			<div class="col-md-3 ticket-grid">
-				<div class="tickets">
-					<div class="grid-left">
-						<div class="book-icon">
-							<i class="fa fa-book"></i>
-						</div>
-					</div>
-					<div class="grid-right">
-						<h3>新增事件数<span>New Event</span></h3>
-						<p>${adminIndexModel.newEventNUM}</p>
-					</div>
-					<div class="clearfix"> </div>
-				</div>
-			</div>
-			<div class="col-md-3 ticket-grid">
-				<div class="tickets">
-					<div class="grid-left">
-						<div class="book-icon">
-							<i class="fa fa-rocket"></i>
-						</div>
-					</div>
-					<div class="grid-right">
-						<h3>活跃用户数 <span>Active User</span></h3>
-						<p>${adminIndexModel.activeUserNUM}</p>
-					</div>
-					<div class="clearfix"> </div>
-				</div>
-			</div>
-			<div class="col-md-3 ticket-grid">
-				<div class="tickets">
-					<div class="grid-left">
-						<div class="book-icon">
-							<i class="fa fa-bar-chart"></i>
-						</div>
-					</div>
-					<div class="grid-right">
-						<h3>新增用户数 <span>New User</span></h3>
-						<p>${adminIndexModel.newUserNUM}</p>
-					</div>
-					<div class="clearfix"> </div>
-				</div>
-			</div>
-			<div class="col-md-3 ticket-grid">
-				<div class="tickets">
-					<div class="grid-left">
-						<div class="book-icon">
-							<i class="fa fa-user"></i>
-						</div>
-					</div>
-					<div class="grid-right">
-						<h3>用户总数 <span>All User</span></h3>
-						<p>${adminIndexModel.allUserNUM}</p>
-					</div>
-					<div class="clearfix"> </div>
-				</div>
-			</div>
-			<div class="clearfix"> </div>
-		</div>
-		
 		
 		<div class="row">
 			<div class="col-md-6">
@@ -78,6 +18,7 @@
 						<!-- candlestick -->
 						<div class="candlestick">
 							
+							<#if notices??>
 							<#list notices as notice>
 								<p>
 								<h3>${notice.noticeTitle}</h3> ${notice.createDate}
@@ -89,6 +30,7 @@
 									<hr>
 								</#if>
 							</#list>
+							</#if>
 						</div>
 						<!-- //candlestick -->
 					</div>
@@ -107,6 +49,7 @@
 					</div>
 					<div class="panel-body">
 						<div class="lines-points">
+						<#if loginRecords??>
 							<#list loginRecords as loginRecord>
 								登录IP：${loginRecord.loginIP} 登录时间：${loginRecord.loginDate}
 								
@@ -114,6 +57,7 @@
 									<hr>
 								</#if>
 							</#list>
+						</#if>	
 						</div>
 					</div>
 				</div>

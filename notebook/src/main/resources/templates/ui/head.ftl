@@ -27,11 +27,10 @@
 							<span class="badge">new</span>
 							-->
 						</a>
-						<!--
+						
 						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="fa fa-heart"></i>
 						</a>
-						-->
 					</li>
 						
 				</ul>

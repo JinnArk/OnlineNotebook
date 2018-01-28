@@ -33,7 +33,6 @@ import com.notebook.service.UserNoteTagService;
 import com.notebook.util.CommonUtil;
 import com.notebook.util.ConstantUtil;
 import com.notebook.util.EmailUtil;
-import com.notebook.util.PasswordUtil;
 import com.notebook.util.StringUtil;
 
 @Controller
@@ -137,51 +136,7 @@ public class AdminController {
 		return new ModelAndView(ConstantUtil.TOSYSTEMMAIL);
 	}
 	
-	/**
-	 * 
-	 * @author 2ing
-	 * @createTime 2018年1月22日
-	 * @remarks 管理员密码修改页面
-	 */
-	@RequestMapping(value="/password", method=RequestMethod.GET)
-	public ModelAndView password(final Model model, final HttpServletRequest request, HttpServletResponse response){
-		
-		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.PASSWORD);
-		return new ModelAndView(ConstantUtil.ADMINMAIN);
-	}
-	
-	/**
-	 * 
-	 * @author 2ing
-	 * @createTime 2018年1月24日
-	 * @remarks AJAX修改密码
-	 */
-	@RequestMapping(value = "/newpassword", method = RequestMethod.POST)
-    @ResponseBody
-    public String newpassword(String oldpassword,String newpassword) {
-		
-		try {
-			String salt = PasswordUtil.createSalt();
-			//获取当前用户
-	 		UserInfo user = (UserInfo)SecurityUtils.getSubject().getPrincipal();
-			if(PasswordUtil.encryptPassword(oldpassword,user.getSalt()).equals(user.getPassword())){//旧密码是否正确
-		 		user.setSalt(salt);
-		 		user.setPassword(PasswordUtil.encryptPassword(newpassword,salt));
-		 		userInfoService.saveUserInfo(user);
-				//int result = userInfoService.saveUserInfo(user);//影响行数
-				return ConstantUtil.AJAX_SUCCESS;
-				
-			}else{
-				return ConstantUtil.AJAX_FAIL;
-			}
-	 		
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ConstantUtil.AJAX_ERROR;
-		}
-	}
-	
+
 	/**
 	 * 
 	 * @author 2ing
@@ -397,8 +352,8 @@ public class AdminController {
 			}else{
 				userNotesPage = new Page<UserNote>(1,5);
 			}
-			userNotesPage = userNoteService.getUserNoteByPageAndCondition(userNotesPage, userID, null);
-			userNotesPage.setTotal(userNoteService.getUserNoteNumByCondition(userID, null));
+			userNotesPage = userNoteService.getUserNoteByPageAndCondition(userNotesPage, userID, null, null, null);
+			userNotesPage.setTotal(userNoteService.getUserNoteNumByCondition(userID, null, null, null));
 
 			//用于pagemodel跳转的url
 			model.addAttribute(ConstantUtil.PAGEMODEL_URL, ConstantUtil.NOTESURL);
@@ -473,8 +428,8 @@ public class AdminController {
 			}else{
 				userNoteTagsPage = new Page<UserNotetag>(1,5);
 			}
-			userNoteTagsPage = userNoteTagService.getUserNoteTagByPageAndCondition(userNoteTagsPage, userID, null);
-			userNoteTagsPage.setTotal(userNoteTagService.getUserNoteTagNumByCondition(userID, null));
+			userNoteTagsPage = userNoteTagService.getUserNoteTagByPageAndCondition(userNoteTagsPage, userID, null, null);
+			userNoteTagsPage.setTotal(userNoteTagService.getUserNoteTagNumByCondition(userID, null, null));
 
 			//用于pagemodel跳转的url
 			model.addAttribute(ConstantUtil.PAGEMODEL_URL, ConstantUtil.NOTETAGSURL);

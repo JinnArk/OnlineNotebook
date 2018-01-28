@@ -4,11 +4,12 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 
 public class SysRole implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
+	@TableId
     private int roleId;
 
     private String role;

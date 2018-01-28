@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.notebook.entities.UserInfo;
+
 /**
  * 
  * @author 2ing
@@ -11,6 +13,23 @@ import javax.servlet.http.HttpServletRequest;
  * @remarks 公用工具类
  */
 public class CommonUtil {
+	
+	/**
+	 * 
+	 * @author 2ing
+	 * @createTime 2018年1月28日
+	 * @remarks 去admin/ui
+	 */
+	public final static String whereTogo(UserInfo user){
+		String uiORadmin = null;
+		if(user.getUserId()==9527){
+			uiORadmin = ConstantUtil.ADMINMAIN;
+		}else{
+			uiORadmin = ConstantUtil.UIMAIN;
+		}
+		return uiORadmin;
+	}
+	
 	/**
 	 * 
 	 * @author 2ing

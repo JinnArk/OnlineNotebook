@@ -2,7 +2,10 @@ package com.notebook.entities;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+
 public class UserFavorite {
+	@TableId
     private Integer favoriteId;
 
     private Integer userId;

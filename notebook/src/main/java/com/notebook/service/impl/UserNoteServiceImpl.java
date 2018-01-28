@@ -21,15 +21,15 @@ public class UserNoteServiceImpl implements UserNoteService{
 	
 	@Override
 	public Page<UserNote> getUserNoteByPageAndCondition(Page<UserNote> page,
-			String userID, String noteTagID) throws Exception {
-		EntityWrapper<UserNote> entityWrapper = wrapperCreate(userID, noteTagID);
+			String userID, String noteTagID, String createDate, String state) throws Exception {
+		EntityWrapper<UserNote> entityWrapper = wrapperCreate(userID, noteTagID, createDate, state);
 		return page.setRecords(userNoteMapper.selectNoteByPageAndCondition(page, entityWrapper));
 	}
 
 	@Override
-	public int getUserNoteNumByCondition(String userID, String noteTagID)
+	public int getUserNoteNumByCondition(String userID, String noteTagID, String createDate, String state)
 			throws Exception {
-		EntityWrapper<UserNote> entityWrapper = wrapperCreate(userID, noteTagID);
+		EntityWrapper<UserNote> entityWrapper = wrapperCreate(userID, noteTagID, createDate, state);
 		return userNoteMapper.selectCount(entityWrapper);
 	}
 	
@@ -39,13 +39,26 @@ public class UserNoteServiceImpl implements UserNoteService{
 	 * @createTime 2018年1月26日
 	 * @remarks 自定义wrapper构造方法
 	 */
-	private static EntityWrapper<UserNote> wrapperCreate(String userID, String noteTagID) throws Exception{
+	private static EntityWrapper<UserNote> wrapperCreate(String userID, String noteTagID
+			, String createDate, String state) throws Exception{
+		
 		EntityWrapper<UserNote> entityWrapper = new EntityWrapper<UserNote>();
-
+		StringBuffer dateSql = null;
+		if(!StringUtil.isEmpty(createDate)){
+			dateSql = new StringBuffer();
+			dateSql.append("TO_DAYS(CREATE_DATE)=TO_DAYS('").append(createDate).append("')");
+		}
+		
 		if(!StringUtil.isEmpty(userID)){
 			entityWrapper.where("USER_ID="+userID);
 			if(!StringUtil.isEmpty(noteTagID)){
 				entityWrapper.and("NOTETAG_ID="+noteTagID);
+			}
+			if(dateSql!=null){
+				entityWrapper.and(dateSql.toString());
+			}
+			if(!StringUtil.isEmpty(state)){
+				entityWrapper.and("NOTE_STATE="+state);
 			}
 		}else{
 			if(!StringUtil.isEmpty(noteTagID)){
@@ -85,6 +98,11 @@ public class UserNoteServiceImpl implements UserNoteService{
 		}else{
 			return 9527;//出现了其他数字
 		}
+	}
+
+	@Override
+	public UserNote getNoteByCondition(String noteID) throws Exception {
+		return userNoteMapper.selectById(noteID);
 	}
 
 }

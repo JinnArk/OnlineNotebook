@@ -104,6 +104,7 @@
 		<!--//scrolling js-->
 </body>
 
+<script src="../static/js/own/commons.js"></script>
 <script src="../static/js/own/admin.js"></script>
 <script src="../static/js/own/ajaxUtil.js"></script>
 </html>

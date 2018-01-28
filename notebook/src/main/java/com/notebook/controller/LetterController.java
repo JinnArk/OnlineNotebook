@@ -19,6 +19,7 @@ import com.notebook.entities.UserInfo;
 import com.notebook.model.common.LetterModel;
 import com.notebook.service.LetterService;
 import com.notebook.service.UserInfoService;
+import com.notebook.util.CommonUtil;
 import com.notebook.util.ConstantUtil;
 import com.notebook.util.StringUtil;
 
@@ -37,6 +38,10 @@ public class LetterController {
 	@Autowired
 	LetterService letterService;
 	
+	String uiORadmin = null;//去admin还是ui
+	
+
+	
 	/**
 	 * 
 	 * @author 2ing
@@ -45,9 +50,11 @@ public class LetterController {
 	 */
 	@RequestMapping(value="/letterUnread", method=RequestMethod.GET)
 	public ModelAndView letterUnread(final Model model, final HttpServletRequest request, HttpServletResponse response){
+
 		try {
 			String pagenow = request.getParameter("pagenow");
 			UserInfo user = (UserInfo)SecurityUtils.getSubject().getPrincipal();
+			uiORadmin = CommonUtil.whereTogo(user);
 			
 			Page<LetterModel> unreadLetterPage = null;
 			if(!StringUtil.isEmpty(pagenow)){
@@ -72,7 +79,7 @@ public class LetterController {
 		}
 
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.LETTER_UNREAD);
-		return new ModelAndView(ConstantUtil.ADMINMAIN);
+		return new ModelAndView(uiORadmin);
 	}
 	
 	/**
@@ -97,10 +104,12 @@ public class LetterController {
 	 */
 	@RequestMapping(value="/letterSended", method=RequestMethod.GET)
 	public ModelAndView letterSended(final Model model, final HttpServletRequest request, HttpServletResponse response){
+		
 		try {
 			String pagenow = request.getParameter("pagenow");
 			String createDate = request.getParameter("createDate");
 			UserInfo user = (UserInfo)SecurityUtils.getSubject().getPrincipal();
+			uiORadmin = CommonUtil.whereTogo(user);
 			
 			Page<LetterModel> sendedLetterPage = null;
 			if(!StringUtil.isEmpty(pagenow)){
@@ -128,7 +137,7 @@ public class LetterController {
 		}
 
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.LETTER_SENDED);
-		return new ModelAndView(ConstantUtil.ADMINMAIN);
+		return new ModelAndView(uiORadmin);
 	}
 	
 	/**
@@ -240,6 +249,7 @@ public class LetterController {
 			
 			if(!StringUtil.isEmpty(createDate)){
 				UserInfo user = (UserInfo)SecurityUtils.getSubject().getPrincipal();
+				uiORadmin = CommonUtil.whereTogo(user);
 				
 				Page<LetterModel> readLetterPage = null;
 				if(!StringUtil.isEmpty(pagenow)){
@@ -266,6 +276,6 @@ public class LetterController {
 		}
 		
 		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.LETTER_SERACH);
-		return new ModelAndView(ConstantUtil.ADMINMAIN);
+		return new ModelAndView(uiORadmin);
 	}
 }

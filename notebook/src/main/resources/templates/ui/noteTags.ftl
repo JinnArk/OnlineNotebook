@@ -15,19 +15,15 @@
 									<h4>标签查询</h4>
 								</div>
 								<div class="form-body" data-example-id="simple-form-inline">
-									<form class="form-inline"> 
+									<form class="form-inline" action="/ui/noteTags" method="get"> 
 										<div class="form-group"> 
 											<label for="exampleInputName2">记录时间：</label> 
-											<input type="text" class="form-control" id="exampleInputName2"
-											placeholder="Your name">
-										</div>
-										<div class="form-group">
-											<label for="exampleInputEmail2">标签名称：</label> 
-											<input type="email" class="form-control" id="exampleInputEmail2" placeholder="mail.abc@example.com">
+											<input type="text" class="form-control" id="createDate" name="createDate"
+											placeholder="2018-1-28">
 										</div>
 										
-										<a href="javascript:;" class="hvr-outline-in btn btn-info">快速搜索</a>
-										<a href="javascript:;" class="hvr-outline-in btn btn-success">新建标签</a>
+										<button type="sumbit" class="hvr-outline-in btn btn-info">快速搜索</button>
+										<a href="/ui/noteTagPage" class="hvr-outline-in btn btn-success">新建标签</a>
 									</form> 
 								</div>
 							</div>
@@ -39,33 +35,24 @@
 							<table class="table table-hover"> 
 								<thead> 
 									<tr>
-										<th>#</th> <th>标签名称</th> <th>创建时间</th> <th>可用操作</th> 
+										<th>标签名称</th> <th>创建时间</th> <th>最近修改时间</th> <th>可用操作</th> 
 									</tr> 
 								</thead> 
 								<tbody> 
+									<#list pageModels.records as noteTag>
 									<tr> 
-										<th scope="row">1</th> <td>Mark</td> <td>Otto</td> 
+										<td>${noteTag.notetagName}</td> <td>${noteTag.createDate}</td> <td>${noteTag.modifyDate}</td> 
 										<td>
-											<a href="javascript:;" class="label label-warning">修改</a>
-											<a href="javascript:;" class="label label-danger">删除</a>
+											<a href="/ui/noteTagPage?noteTagID=${noteTag.notetagId?c}" class="label label-warning">修改</a>
+											<a href="/ui/noteTagToClose?noteTagID=${noteTag.notetagId?c}" class="label label-danger">删除</a>
 										</td> 
 									</tr> 
-									<tr> 
-										<th scope="row">2</th> <td>Jacob</td> <td>Thornton</td> 
-										<td>
-											<a href="javascript:;" class="label label-warning">修改</a>
-											<a href="javascript:;" class="label label-danger">删除</a>
-										</td> 
-									</tr> 
+									</#list>
 								</tbody> 
 							</table>
 						</div>
 						
-						<div class="but_list">
-						   <div class="alert alert-danger" role="alert">
-							<strong>是空的</strong> 请检查你所输入的搜索信息
-						   </div>
-						 </div>
+						<#include "../commons/pageModel.ftl">
 					</div>
 				</div>
 				<!--//typography-->

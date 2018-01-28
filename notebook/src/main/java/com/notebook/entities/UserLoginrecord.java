@@ -2,7 +2,10 @@ package com.notebook.entities;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+
 public class UserLoginrecord {
+	@TableId
     private Integer recordId;
 
     private Integer userId;
