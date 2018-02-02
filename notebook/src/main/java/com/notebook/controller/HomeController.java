@@ -198,7 +198,7 @@ public class HomeController {
 	@RequestMapping(value={"/password"},method=RequestMethod.GET)
 	public ModelAndView password(final Model model, final HttpServletRequest request, HttpServletResponse response){
 
-		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.PASSWORD);
+		model.addAttribute(ConstantUtil.CONTENT, ConstantUtil.REPASSWORD);
 		return new ModelAndView(ConstantUtil.MAIN);
 	}
 	

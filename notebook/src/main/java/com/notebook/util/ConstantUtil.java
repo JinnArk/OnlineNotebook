@@ -15,6 +15,7 @@ public final class ConstantUtil {
 	public static final String CONTENT = "content";
 	public static final String FOOT = "foot";
 	public static final String INDEX = "index";
+	public static final String REPASSWORD = "/password";
 	public static final String PASSWORD = "/commons/password";
 	public static final String PAGEMODELS = "pageModels";
 		//AJAX
